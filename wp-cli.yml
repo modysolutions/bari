@@ -1,0 +1,10 @@
+path: /var/www/html
+
+@ei:
+  ssh: docker:www-data@ei_app
+@ci:
+  ssh: docker:www-data@ci_app
+@ti:
+  ssh: docker:www-data@ti_app
+@cti:
+  ssh: docker:www-data@cti_app

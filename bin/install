@@ -1,0 +1,23 @@
+#!/bin/bash
+
+ROOT_DIR=$(pwd)
+ENV_FILE="${ROOT_DIR}/.env"
+./bin/log "INFO" "Checking .env file exists in ${ENV_FILE}"
+if [ ! -f "${ENV_FILE}" ]; then
+  ./bin/log "ERROR" "No .env file found"
+  exit 1;
+fi
+source "${ENV_FILE}";
+
+./bin/certs
+docker compose up -d --build --force-recreate
+cd "${ROOT_DIR}/app" || exit
+rm -rf wp-content
+git clone git@github.com:Tamarind-Tech/wordpress.git wp-content
+cd "${ROOT_DIR}/app/wp-content" || exit
+git reset --hard HEAD
+git checkout develop
+cd "${ROOT_DIR}" || exit
+./bin/composer -d /var/www/html/wp-content config http-basic.plugins.tamarindintelligence.com "${SATISPRESS_KEY}" "satispress"
+./bin/build
+./bin/db pull "${SITE_SLUG}"

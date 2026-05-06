@@ -1,0 +1,11 @@
+#!/bin/bash
+ROOT_DIR=$(pwd)
+
+./bin/log "INFO" "Generating SSL certificates for local development domains..."
+if [ ! -d "$ROOT_DIR/config/ssl" ]; then
+  mkdir -p "$ROOT_DIR/config/ssl"
+fi
+
+./bin/log "INFO" "Running mkcert to generate certificates for local domains..."
+mkcert -cert-file ./config/ssl/local-cert.pem -key-file ./config/ssl/local-key.pem "ecigintelligence.local" "mail.ecigintelligence.local" "tobaccointelligence.local" "mail.tobaccointelligence.local" "cannintelligence.local" "mail.cannintelligence.local" "tamarindintelligence.local" "mail.tamarindintelligence.local" 127.0.0.1
+sudo mkcert -install

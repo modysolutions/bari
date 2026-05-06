@@ -1,0 +1,104 @@
+#!/bin/bash
+
+ROOT_DIR=$(pwd)
+COMMAND="${1:-import}"
+DB="${2:-ei}"
+
+START_TIME_SECONDS=$(date +%s)
+START_TIME_HUMAN=$(date "+%Y-%m-%d %H:%M:%S")
+
+./bin/log "INFO" "Starting DB command at ${START_TIME_HUMAN}"
+
+ENV_FILE="${ROOT_DIR}/.env"
+
+if [ -f "${ENV_FILE}" ]; then
+    source "${ENV_FILE}"
+fi
+
+./bin/log "INFO" "Determining remote host for ${WORDPRESS_ENVIRONMENT} environment"
+if [ "$WORDPRESS_ENVIRONMENT" == "stage" ]; then
+      REMOTE_HOST="$SSH_HOST_PRODUCTION"
+      PREFIX=""
+else
+    REMOTE_HOST="$SSH_HOST_STAGE"
+    PREFIX="stage."
+fi
+
+if [[ "$COMMAND" == "pull" || "$COMMAND" == "download" ]]; then
+  ./bin/log "INFO" "Downloading ${DB} database..."
+
+  if [ -z "$REMOTE_HOST" ]; then
+      ./bin/log "ERROR" "Unable to determine remote host from $ENV_FILE"
+      exit 1
+  fi
+
+  REMOTE_PATH="/etc/dumps"
+  LOCAL_PATH="${ROOT_DIR}/app/wp-content/dumps"
+
+  ./bin/log "INFO" "mkdir -p ${LOCAL_PATH}"
+  mkdir -p "$LOCAL_PATH"
+
+  case "$DB" in
+      ei|ti|ci|cti)
+          DB_NAME="${DB}_db"
+          ;;
+      *)
+          ./bin/log "ERROR" "Parameters are ei|ti|ci|cti"
+          exit 1
+          ;;
+  esac
+
+  FILE_NAME="${DB_NAME}.sql"
+
+  ./bin/log "INFO" "Pulling ${DB_NAME} database from ${REMOTE_HOST}"
+  ./bin/log "INFO" "rsync -avzP ${REMOTE_HOST}:${REMOTE_PATH}/${FILE_NAME} $LOCAL_PATH/"
+
+  if rsync -avzP "${REMOTE_HOST}:${REMOTE_PATH}/${FILE_NAME}" "$LOCAL_PATH/"; then
+    ./bin/log "SUCCESS" "Database downloaded successfully to ${LOCAL_PATH}"
+  else
+    ./bin/log "ERROR" "Database download failed"
+    exit 1
+  fi
+
+  if [ "$(stat -c '%u' "$LOCAL_PATH/$FILE_NAME")" == "0" ]; then
+      sudo chown 82:82 "$LOCAL_PATH/" -R
+      ./bin/log "SUCCESS" "Ownership fixed for $FILE_NAME"
+  fi
+
+  if [ "$COMMAND" == "download" ]; then
+    exit 0
+  fi
+fi
+
+./bin/log "INFO" "Importing database into container..."
+./bin/log "INFO" "bash ${ROOT_DIR}/bin/wp @${DB} db import /var/www/html/wp-content/dumps/${DB}_db.sql"
+
+if bash ${ROOT_DIR}/bin/wp @$DB db import /var/www/html/wp-content/dumps/${DB}_db.sql; then
+    ./bin/log "SUCCESS" "Database ${DB_NAME} imported successfully to ${WORDPRESS_ENVIRONMENT} environment"
+else
+    ./bin/log "ERROR" "Database import failed! Check if mysql-client is installed in the container."
+    exit 1
+fi
+
+./bin/log "INFO" "Replacing URL from ${PREFIX}${SITE_NAME}.com to ${HOST_NAME}..."
+./bin/log "INFO" "bash ${ROOT_DIR}/bin/wp @$DB search-replace '://${PREFIX}${SITE_NAME}.com' '://${HOST_NAME}'"
+
+if bash ${ROOT_DIR}/bin/wp @$DB search-replace "://${PREFIX}${SITE_NAME}.com" "://${HOST_NAME}" --skip-plugins --skip-themes; then
+  ./bin/log "SUCCESS" "URL replaced from ${PREFIX}${SITE_NAME}.com to ${HOST_NAME} successfully"
+else
+  ./bin/log "ERROR" "There was an error changing URL from ${PREFIX}${SITE_NAME}.com to ${HOST_NAME}"
+  exit 1;
+fi
+
+./bin/log "SUCCESS" "URL replaced successfully from ${PREFIX}${SITE_NAME}.com to ${HOST_NAME}"
+
+END_TIME_SECONDS=$(date +%s)
+END_TIME_HUMAN=$(date "+%Y-%m-%d %H:%M:%S")
+ELAPSED_TOTAL=$((END_TIME_SECONDS - START_TIME_SECONDS))
+ELAPSED_MIN=$((ELAPSED_TOTAL / 60))
+ELAPSED_SEC=$((ELAPSED_TOTAL % 60))
+
+echo ""
+./bin/log "INFO" "Ending DB command at ${END_TIME_HUMAN}"
+./bin/log "INFO" "Elapsed time: ${ELAPSED_MIN}:$(printf "%02d" $ELAPSED_SEC)"
+exit 0

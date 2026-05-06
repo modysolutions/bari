@@ -1,0 +1,51 @@
+#!/bin/bash
+
+ENV_MODE=${1:-stage}
+ROOT_DIR=$(pwd)
+
+GULP_PATHS=(
+    "app/wp-content/plugins/tamarind-base/"
+    "app/wp-content/plugins/tamarind-favourites/"
+    "app/wp-content/plugins/tamarind-forms/"
+    "app/wp-content/plugins/tamarind-notifications/"
+    "app/wp-content/plugins/tamarind-search/"
+    "app/wp-content/plugins/tamarind-user-area/"
+    "app/wp-content/plugins/tamarind-user-home/"
+    "app/wp-content/plugins/tamarind-company-news/"
+    "app/wp-content/plugins/tamarind-events/"
+    "app/wp-content/plugins/tamarind-reports/"
+    "app/wp-content/plugins/tamarind-subscriptions/"
+    "app/wp-content/themes/ecig-intelligence-theme"
+    "app/wp-content/themes/tobacco-intelligence-theme"
+    "app/wp-content/themes/cann-intelligence-theme"
+    "app/wp-content/themes/tamarind-intelligence-theme"
+)
+
+if [ "$ENV_MODE" == "prod" ]; then
+    COMPOSER_FLAGS="--no-dev --optimize-autoloader"
+else
+    COMPOSER_FLAGS="--optimize-autoloader"
+fi
+
+for DIR in "${GULP_PATHS[@]}"; do
+    ./bin/log "INFO" "Processing assets in $DIR using $ENV_MODE mode..."
+    cd "$DIR" || exit
+    rm -rf ./node_modules
+    npm install
+    if [ -f "./node_modules/.bin/gulp" ]; then
+        ./node_modules/.bin/gulp build
+    else
+        npx gulp build
+    fi
+    cd "$ROOT_DIR" || exit
+done
+
+./bin/log "INFO" "Installing root Composer dependencies using $ENV_MODE..."
+./bin/composer install -d /var/www/html/wp-content $COMPOSER_FLAGS
+
+./bin/log "INFO" "Installing specific plugin dependencies using $ENV_MODE..."
+./bin/composer install -d /var/www/html/wp-content/plugins/omitsis-location-detector $COMPOSER_FLAGS
+./bin/composer install -d /var/www/html/wp-content/plugins/omitsis-tableau $COMPOSER_FLAGS
+./bin/composer install -d /var/www/html/wp-content/plugins/tamarind-pdfs $COMPOSER_FLAGS
+
+./bin/log "SUCCESS" "Build complete."

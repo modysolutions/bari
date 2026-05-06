@@ -1,0 +1,65 @@
+{
+    "name": "tamarind/wp",
+    "version": "0.0.1",
+    "description": "WordPress Marketing Sites",
+    "autoload": {
+        "psr-4": {
+            "App\\": "wp-content/src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Tamarind Intelligence"
+        }
+    ],
+    "repositories": {
+        "tamarind": {
+            "type": "composer",
+            "url": "https://plugins.tamarindintelligence.com/satispress/"
+        },
+        "mody": {
+            "type": "composer",
+            "url": "https://plugins.mody.cloud/satispress/"
+        },
+        "wpackagist": {
+            "type": "composer",
+            "url": "https://wpackagist.org",
+            "only": ["wpackagist-plugin/*", "wpackagist-theme/*"]
+        }
+    },
+    "require": {
+        "mody/astra": "4.13.1",
+        "mody/astra-addon": "4.13.1",
+        "tamarind/gravityforms": "2.9.24.2",
+        "tamarind/gravityformsgoogleanalytics": "2.4.0",
+        "tamarind/gravityformsrecaptcha": "2.1.0",
+        "tamarind/advanced-custom-fields-pro": "6.6.2",
+        "tamarind/wp-mail-smtp-pro": "4.7.1",
+        "tamarind/wordfence": "8.1.4",
+        "wpackagist-plugin/wordpress-seo": "26.8",
+        "wpackagist-plugin/ewww-image-optimizer": "8.3.1",
+        "wpackagist-plugin/user-role-editor": "4.64.6",
+        "wpackagist-plugin/w3-total-cache": "2.9.1",
+        "wpackagist-plugin/redirection": "5.6.1",
+        "wpackagist-plugin/smart-phone-field-for-gravity-forms": "2.2.0",
+        "wpackagist-plugin/ultimate-addons-for-gutenberg": "2.19.26"
+    },
+    "require-dev": {
+        "wpackagist-plugin/query-monitor": "3.20.2",
+        "roave/security-advisories": "dev-latest",
+        "laravel/pint": "1.18"
+    },
+    "extra": {
+        "installer-paths": {
+            "wp-content/plugins/{$name}/": ["type:wordpress-plugin"],
+            "wp-content/themes/{$name}/": ["type:wordpress-theme"]
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "allow-plugins": {
+            "composer/installers": true
+        }
+    }
+}

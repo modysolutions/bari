@@ -1,0 +1,59 @@
+server {
+    listen 80;
+    server_name ${HOST_NAME};
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name ${HOST_NAME};
+
+    ssl_certificate /etc/nginx/ssl/cert.pem;
+    ssl_certificate_key /etc/nginx/ssl/key.pem;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+
+    client_max_body_size 256M;
+
+    root /var/www/html;
+    index index.php index.html index.htm;
+
+    resolver 8.8.8.8 1.1.1.1 valid=300s;
+    resolver_timeout 5s;
+
+    location ^~ /wp-content/uploads/ {
+        try_files $uri @production_proxy;
+    }
+
+    location @production_proxy {
+        set $prod_url https://${PROXY_NAME};
+        proxy_pass $prod_url$request_uri;
+        proxy_set_header Host ${PROXY_NAME};
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_ssl_server_name on;
+        proxy_ssl_name ${PROXY_NAME};
+        proxy_ssl_protocols TLSv1.2 TLSv1.3;
+        proxy_ssl_session_reuse on;
+        proxy_intercept_errors on;
+        error_page 404 /index.php;
+        add_header X-Proxy-Status "Miss - Fetched from Production";
+    }
+
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
+
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_pass wordpress:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+        fastcgi_buffer_size 32k;
+        fastcgi_buffers 16 16k;
+        fastcgi_busy_buffers_size 64k;
+    }
+}
