@@ -19,6 +19,9 @@ app/wp-*.php
 app/debug.log
 app/license.txt
 app/.htaccess
+app/readme.html
+app/logs
+app/xmlrpc.php
 
 config/ssl/*
 db.backup.sql
