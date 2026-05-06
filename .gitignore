@@ -5,7 +5,7 @@
 wp_core*
 app/wp-admin
 app/wp-includes
-app/wp-content/auth.json
+app/auth.json
 app/wp-content/plugins
 app/wp-content/wp-admin
 app/wp-content/wp-includes
