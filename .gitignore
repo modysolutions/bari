@@ -13,6 +13,7 @@ app/wp-content/debug.log
 app/wp-content/*.md
 !app/wp-content/plugins/omitsis*
 !app/wp-content/plugins/tamarind*
+app/wp-content/uploads
 app/dumps
 app/node_modules
 app/wp-*.php
