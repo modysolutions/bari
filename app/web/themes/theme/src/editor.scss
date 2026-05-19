@@ -1,0 +1,21 @@
+@use './scss/helpers/variables';
+.wp-block-post-content {
+  @import './scss/helpers/normalize';
+  @import './scss/helpers/functions';
+  @import './scss/helpers/media-queries';
+  @import './scss/helpers/mixins';
+  @import './scss/helpers/container';
+
+  @import './scss/layout/editor-base';
+
+  *,
+  *::before,
+  *::after {
+    padding: var(--gap-md) 0;
+    border: 0;
+    box-sizing: border-box;
+  }
+  @import './scss/layout/typography';
+
+  @import './scss/components/button';
+}

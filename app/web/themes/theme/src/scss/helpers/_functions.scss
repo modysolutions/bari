@@ -1,0 +1,16 @@
+@use 'sass:math';
+
+@function stripUnit($value) {
+    @if type-of($value) == 'number' and not unitless($value) {
+        @return math.div($value, ($value * 0 + 1));
+    }
+
+    @return $value;
+}
+
+// ie. pass in 10 or 10px
+@function remcalc($pxValue) {
+    $val: stripUnit($pxValue);
+    // note: if we change html font size, this should still stay the same.
+    @return #{math.div($val, 16)}rem;
+}

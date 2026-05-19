@@ -1,0 +1,166 @@
+@use '../helpers/variables';
+@use '../helpers/mixins';
+@use '../helpers/media-queries';
+@use '../helpers/functions';
+
+//==================================================================
+// BASE PAGE LAYOUT / GENERIC STYLES
+//==================================================================
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: #fff;
+  scroll-padding-top: functions.remcalc(160);
+}
+
+body {
+  // this is not working well (with site banner):
+  // overflow-x: hidden;
+  // try this instead:
+  #main-content {
+    overflow-x: hidden;
+  }
+}
+
+.skip-link {
+  position: absolute;
+  top: var(--header-height);
+  left: 1rem;
+  transform: translateX(-100vw);
+  transition: transform 0.3s ease;
+  background-color: var(--color-green);
+  color: var(--color-white);
+  z-index: 4;
+  &:focus {
+    transform: translateX(0);
+  }
+}
+
+img {
+  height: auto;
+  max-width: 100%;
+}
+
+nav ul {
+  @include mixins.list-reset;
+}
+
+html.noscroll {
+  overflow: hidden;
+  &.overlay {
+    position: relative;
+  }
+}
+
+@each $colorKey, $color in variables.$colorList {
+  .bg-#{'' + $colorKey} {
+    background-color: $color;
+  }
+}
+
+//==================================================================
+// LAYOUT UTILITY
+//==================================================================
+.invisible {
+  @include mixins.invisible;
+}
+
+.bg-image {
+  @include mixins.bg-image;
+}
+
+// screen reader text
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+*[section-padding] {
+  padding-top: var(--section-padding-top-mobile);
+  padding-bottom: var(--section-padding-bottom-mobile);
+  // maybe tablet?
+  @include media-queries.for-laptop-up {
+    padding-top: var(--section-padding-top-desktop);
+    padding-bottom: var(--section-padding-bottom-desktop);
+  }
+}
+
+section, .scroll-margin {
+  position: relative;
+  scroll-margin-top: functions.remcalc(100);
+}
+
+.page-content, section {
+  background-color: var(--background-color);
+}
+
+.sub-section-wrapper {
+  > *:not(:last-child) {
+    margin-bottom: functions.remcalc(50);
+  }
+  &--phone-sm {
+    @include media-queries.for-tablet-down {
+      > *:not(:last-child) {
+        margin-bottom: functions.remcalc(30);
+      }
+    }
+  }
+  &--mobile-sm {
+    @include media-queries.for-laptop-down {
+      > *:not(:last-child) {
+        margin-bottom: functions.remcalc(30);
+      }
+    }
+  }
+}
+
+br.desktop {
+  @include media-queries.for-desktop-down {
+    display: none;
+  }
+}
+
+br.desktop-lg {
+  @include media-queries.for-custom-down(#{functions.remcalc(1222)}) {
+    display: none;
+  }
+}
+
+br.mobile {
+  @include media-queries.for-desktop-up {
+    display: none;
+  }
+}
+
+// display classes used mainly for buttons,
+// maybe for other things.
+
+// below tablet
+.display-only--mobile {
+  @include media-queries.for-tablet-up {
+    display: none !important;
+  }
+}
+
+// tablet and up
+.display-only--desktop {
+  @include media-queries.for-tablet-down {
+    display: none !important;
+  }
+}
+
+.wp-block {
+  margin: 0;
+  padding: 0;
+}

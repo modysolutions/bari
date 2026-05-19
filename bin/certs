@@ -7,5 +7,5 @@ if [ ! -d "$ROOT_DIR/config/ssl" ]; then
 fi
 
 ./bin/log "INFO" "Running mkcert to generate certificates for local domains..."
-mkcert -cert-file ./config/ssl/local-cert.pem -key-file ./config/ssl/local-key.pem "ecigintelligence.local" "mail.ecigintelligence.local" "tobaccointelligence.local" "mail.tobaccointelligence.local" "cannintelligence.local" "mail.cannintelligence.local" "tamarindintelligence.local" "mail.tamarindintelligence.local" 127.0.0.1
+mkcert -cert-file ./config/ssl/local-cert.pem -key-file ./config/ssl/local-key.pem "ecigintelligence.local" "*.ecigintelligence.local" "tobaccointelligence.local" "*.tobaccointelligence.local" "cannintelligence.local" "*.cannintelligence.local" "tamarindintelligence.local" "*.tamarindintelligence.local" 127.0.0.1
 sudo mkcert -install

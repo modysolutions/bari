@@ -1,0 +1,631 @@
+@use '../helpers/variables';
+@use '../helpers/media-queries';
+@use '../helpers/functions';
+
+//==================================================================
+// TYPOGRAPHY
+//==================================================================
+html {
+    font-size: var(--body-font);
+    font-family: var(--body-font, variables.$body-font);
+    color: var(--color-body-font);
+
+    @include media-queries.for-laptop-up {
+        overflow-x: hidden;
+    }
+}
+
+body,
+::before,
+::after {
+    -webkit-font-smoothing: antialiased;
+    .wp-block-post-content {
+        font-family: var(--body-font, variables.$body-font);
+    }
+}
+
+// ************ GLOBALS ************
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+p,
+li {
+    font-size: var(--body-font-size);
+    line-height: 1.2;
+    font-weight: 400;
+    color: var(--color-body-font);
+}
+
+div {
+    color: var(--color-body-font);
+    line-height: 1.2;
+    font-weight: 400;
+}
+
+ul,
+li {
+    list-style: none;
+}
+
+// ************ HEADINGS ************
+h1, h2, .h1, .h2 {
+    font-family: variables.$heading-font;
+    line-height: 1.15;
+    font-weight: 500;
+    color: var(--title-color);
+}
+h3, .h3 {
+    font-family: variables.$heading-font;
+    line-height: 1.15;
+    font-weight: 400;
+    color: var(--title-color);
+    // margin-bottom: functions.remcalc(30);
+}
+h4, h5, h6, .h4, .h5, .h6 {
+    font-family: variables.$body-font;
+    line-height: 1.15;
+    font-weight: 600;
+    color: var(--super-title-color);
+    // margin-bottom: functions.remcalc(30);
+    b, strong {
+        color: var(--super-title-accent-color);
+    }
+}
+
+// Adding negative top/bottom margins to offset the line height, 
+// so that for .content-spacing we can use same values as from the figma
+h1, .h1 {
+    font-size: functions.remcalc(32);
+    margin-top: functions.remcalc(-3);
+    margin-bottom: functions.remcalc(-5);
+    @include media-queries.for-laptop-up {
+        font-size: functions.remcalc(45);
+        margin-top: functions.remcalc(-3);
+        margin-bottom: functions.remcalc(-7);
+    }
+}
+h2, .h2 {
+    font-size: functions.remcalc(28);
+    margin-top: functions.remcalc(-2);
+    margin-bottom: functions.remcalc(-4);
+    @include media-queries.for-laptop-up {
+        font-size: functions.remcalc(36);
+        margin-top: functions.remcalc(-2);
+        margin-bottom: functions.remcalc(-5);
+    }
+}
+h3, .h3 {
+    font-size: functions.remcalc(24);
+    margin-top: functions.remcalc(-2);
+    margin-bottom: functions.remcalc(-3);
+}
+h4, .h4 {
+    font-size: functions.remcalc(22);
+    margin-top: functions.remcalc(-2);
+    margin-bottom: functions.remcalc(-3);
+}
+h5, .h5 {
+    font-size: var(--body-font-size);
+    margin-top: functions.remcalc(-2);
+    margin-bottom: functions.remcalc(-3);
+}
+h6, .h6 {
+    font-size: var(--body-font-size);
+    margin-top: functions.remcalc(-2);
+    margin-bottom: functions.remcalc(-3);
+}
+// note: p has diff font family therefore so more neg margin on top
+p {
+    font-family: var(--body-font, variables.$body-font);
+    margin-top: functions.remcalc(-3);
+    margin-bottom: functions.remcalc(-2);
+}
+
+.h4-style{
+    font-family: variables.$body-font;
+    line-height: 1.15;
+    font-weight: 600;
+    color: var(--super-title-color);
+    // margin-bottom: functions.remcalc(30);
+    font-size: functions.remcalc(22);
+    b, strong {
+        color: var(--super-title-accent-color);
+    }
+}
+
+// ************ LISTS ************
+// we'll avoid applying these globally
+@mixin list-styles {
+
+    ul,
+    ol {
+        // makes room for checkmark svg, and ensures
+        // nested lists or any type are indented further.
+        padding-left: functions.remcalc(24);
+        padding-top: var(--content-spacing);
+        margin-top: functions.remcalc(-4);
+        margin-bottom: functions.remcalc(-2);
+
+        ul,
+        ol {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        
+        // very first list item, but not nested items
+        > li:first-child {
+            padding-top: 0;
+        }
+    }
+
+    li {
+        position: relative;
+        padding-top: functions.remcalc(13);
+    }
+
+    ul {
+        list-style: none;
+        
+        li {
+            list-style: none;
+            // list-style-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 22 21" fill="currentColor"><g clip-path="url(%23clip0_881_4449)"><path d="M8.19612 14.6566C8.54396 14.1348 8.875 13.6276 9.21494 13.1273C9.5944 12.5693 9.98276 12.0171 10.3662 11.461C10.8672 10.7345 11.3692 10.009 11.8682 9.28156C12.3307 8.60698 12.7892 7.93143 13.2487 7.25489C13.8545 6.36394 14.4573 5.47005 15.068 4.58204C15.6322 3.76158 16.2034 2.94406 16.7775 2.13046C17.2084 1.51952 17.6501 0.914456 18.0859 0.306455C18.2351 0.0988931 18.4584 0.0254631 18.6926 0.00881895C18.9436 -0.00978332 19.2016 -0.0127205 19.4328 0.117495C19.5533 0.185051 19.6719 0.258481 19.7856 0.337785C20.3617 0.739203 20.9299 1.15237 21.5119 1.54497C22.0663 1.918 22.1236 2.6709 21.8074 3.13106C21.3835 3.74787 20.9724 4.3735 20.5524 4.99325C20.0633 5.71384 19.5711 6.4315 19.08 7.15111C18.5889 7.86974 18.1007 8.59034 17.6076 9.30799C17.0572 10.1098 16.5038 10.9088 15.9534 11.7106C15.3091 12.6495 14.6678 13.5914 14.0225 14.5303C13.4879 15.3087 12.9513 16.0841 12.4147 16.8605C11.7605 17.8073 11.1044 18.754 10.4502 19.7018C10.2911 19.9328 10.134 20.1658 9.97288 20.3959C9.81576 20.6211 9.57266 20.7347 9.34736 20.8766C9.11118 21.0255 8.85425 20.9941 8.59831 21C8.19414 21.0088 7.84334 20.8669 7.53996 20.6133C7.30576 20.4165 7.07749 20.2119 6.85713 19.9994C6.08634 19.2602 5.31753 18.5191 4.55268 17.774C3.89257 17.1307 3.23048 16.4894 2.58322 15.8335C1.80156 15.0414 1.02781 14.2425 0.265922 13.4308C-0.0334985 13.1117 -0.073026 12.7112 0.100895 12.3167C0.176985 12.1443 0.317308 11.9906 0.453678 11.8536C1.00212 11.3014 1.55452 10.7521 2.1168 10.2146C2.47353 9.87389 2.89944 9.83669 3.34808 10.0129C3.42911 10.0443 3.50223 10.1059 3.56548 10.1666C4.43409 10.9988 5.30271 11.8301 6.1654 12.6691C6.79882 13.2859 7.42237 13.9135 8.05086 14.5362C8.09335 14.5783 8.14276 14.6145 8.19414 14.6576L8.19612 14.6566Z" fill="%2320B47E"/></g><defs><clipPath id="clip0_881_4449"><rect width="22" height="21" fill="white"/></clipPath></defs></svg>');
+            list-style-image: url("data:image/svg+xml,%3Csvg width='13' height='14' viewBox='0 0 13 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.8036 5.70631H7.73169V1.24278C7.73169 0.570481 7.16249 0 6.48825 0C5.81401 0 5.26831 0.568235 5.26831 1.24278V5.7093H1.1935C0.545706 5.7093 0 6.26856 0 6.92813C0 7.5877 0.545706 8.14471 1.1935 8.14471H5.26831V12.7572C5.26831 13.4445 5.81401 14 6.48825 14C7.16249 14 7.73169 13.4437 7.73169 12.7572V8.14471H11.8036C12.4514 8.14471 13 7.58845 13 6.92813C13 6.26781 12.4514 5.7093 11.8036 5.7093' fill='%2320B47E'/%3E%3C/svg%3E");
+            padding-left: functions.remcalc(4);
+
+            &::marker {
+                color: var(--color-teal-light);
+            }
+
+            &::before {
+                display: none !important;
+            }
+        }
+    }
+}
+
+// maybe for use in FAQ accordion or on blog page
+@mixin basic-list-styles {
+
+    ul {
+        li{
+            list-style: disc;
+        }
+        ul {
+            li {
+                list-style: circle;
+            }
+        }
+    }
+    ol li {
+        list-style-type: decimal;
+        ol li {
+            list-style-type: decimal;
+        }
+    }
+    ul,
+    ol {
+        padding-left: functions.remcalc(26);
+        ul,
+        ol {
+            margin-top: 0;
+        }
+        li {
+            margin: functions.remcalc(10) 0;
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
+// if you put this in a double class seletor (ie .your-thing.your-thing,
+// then it should be able to override default .content-inner styles
+@mixin article-list-styles($margin) {
+    ul > li {
+        list-style: disc;
+        > ul > li {
+            list-style: circle;
+        }
+    }
+    ol > li {
+        list-style-type: decimal;
+        > ul > li {
+            list-style: disc;
+            > ul > li {
+                list-style: circle;
+            }
+        }
+    }
+    > ul, > ol {
+        > li:first-child {
+            padding-top: 0;
+        }
+        ul, ol {
+            padding-top: 0;
+        }
+    }
+    ul,
+    ol {
+        padding-left: functions.remcalc(26);
+        ul,
+        ol {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        li {
+            margin: 0;
+        }
+    }
+}
+
+// ************ CONTENT SPACING ************
+
+:root {
+    --content-spacing--reg: #{functions.remcalc(48)};
+    --content-spacing--sm: #{functions.remcalc(28)};
+    --content-spacing: var(--content-spacing--sm);
+    --content-spacing-paragraph: var(--content-spacing--sm);
+    --content-spacing-title-subtitle: #{functions.remcalc(10)};
+    --content-spacing-list-intro: #{functions.remcalc(15)};
+    @include media-queries.for-laptop-up {
+        --content-spacing--sm: #{functions.remcalc(30)};
+        --content-spacing: var(--content-spacing--reg);
+        --content-spacing-paragraph: var(--content-spacing--sm);
+        --content-spacing-title-subtitle: #{functions.remcalc(24)};
+        --content-spacing-list-intro: #{functions.remcalc(18)};
+    }
+}
+
+.content-spacing--sm {
+    --content-spacing: var(--content-spacing--sm);
+}
+
+// used in .content-inner and .content-spacing.
+@mixin content-spacing {
+    h1, h2, h3, h4, h5, h6, p, ul, ol, img {
+        padding-top: var(--content-spacing);
+        &:first-child {
+            padding-top: 0;
+        }
+    }
+    // sometimes this targets a div, which may also have the class .content-spacing
+    > * {
+        padding-top: var(--content-spacing);
+        &:first-child {
+            padding-top: 0;
+        }
+    }
+    p + p {
+        padding-top: var(--content-spacing-paragraph);
+    }
+    // for images in content editor, ie. for contact page hero
+    p {
+        img {
+            padding-top: 0;
+        }
+    }
+    .btns {
+        margin-top: functions.remcalc(3);
+        @include media-queries.for-laptop-up {
+            margin-top: functions.remcalc(4);
+        }
+    }
+}
+
+.content-spacing {
+    @include content-spacing;
+}
+
+// ************ WYSIWYG ************
+
+// General content styles for most components.
+// The blog page or basic content area pages may be different.
+// Note: you can put a .content-inner inside of .content-inner, if
+// for example you want to wrap the contents of a wysiwyg
+.content-inner {
+
+    @include list-styles();
+    
+    // links
+    p,
+    li {
+        a:not(.btn) {
+            font-weight: 600;
+            text-decoration: none;
+
+            &:hover,
+            &:focus-visible {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    img {
+        &.alignleft {
+            @include media-queries.for-tablet-up {
+                float: left;
+                margin: 0;
+                padding: functions.remcalc(8) functions.remcalc(20) 0 0;
+            }
+        }
+
+        &.alignright {
+            @include media-queries.for-tablet-up {
+                float: right;
+                margin: 0;
+                padding: functions.remcalc(8) 0 0 functions.remcalc(20);
+            }
+        }
+
+        &.alignnone {
+            display: block;
+            padding-top: var(--content-spacing);
+        }
+
+        &.aligncenter {
+            display: block;
+            margin: 0 auto;
+            padding-top: var(--content-spacing);
+        }
+    }
+
+    // I find trying to support multiple inline buttons in content area
+    // just causes problems. Will leave this off for now.
+    // .btn {
+    //     margin-bottom: 1rem;
+    //     +.btn {
+    //         margin-left: 1rem;
+    //     }
+    // }
+
+    blockquote {
+        margin: 2.5rem 2rem;
+        padding-left: 2rem;
+        border-left: 3px solid var(--color-primary);
+    }
+
+    hr {
+        border-top: 1px solid var(--color-grey-30);
+        margin: 3rem 0 3.5rem;
+    }
+
+    .wp-caption-text {
+        font-size: 0.875rem;
+    }
+
+    @include content-spacing;
+}
+
+// .list-spacing-lg {
+//     ul li {
+//         margin-bottom: functions.remcalc(3);
+//         &:last-child {
+//             margin-bottom: 0;
+//         }
+//     }
+// }
+
+// Note: this is just the global default now. We can remove this and references
+// to it at a later time.
+.plus-icon-list-styles {
+    ul li {
+        list-style-image: url("data:image/svg+xml,%3Csvg width='13' height='14' viewBox='0 0 13 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.8036 5.70631H7.73169V1.24278C7.73169 0.570481 7.16249 0 6.48825 0C5.81401 0 5.26831 0.568235 5.26831 1.24278V5.7093H1.1935C0.545706 5.7093 0 6.26856 0 6.92813C0 7.5877 0.545706 8.14471 1.1935 8.14471H5.26831V12.7572C5.26831 13.4445 5.81401 14 6.48825 14C7.16249 14 7.73169 13.4437 7.73169 12.7572V8.14471H11.8036C12.4514 8.14471 13 7.58845 13 6.92813C13 6.26781 12.4514 5.7093 11.8036 5.7093' fill='%2320B47E'/%3E%3C/svg%3E");
+        &::marker {
+            color: var(--color-teal-light);
+        }
+    }
+}
+
+.dot-list-styles {
+    ul {
+        padding-top: 24px;
+        li {
+            list-style: disc;
+            &::marker {
+                color: var(--color-teal-light);
+            }
+        }
+    }
+}
+
+.article-list-styles {
+    @include article-list-styles(functions.remcalc(8));
+}
+
+.two-col-list {
+    column-count: 2;
+    column-gap: 2rem;
+    list-style: none;
+    padding: 0;
+}
+
+.content-inner--article {
+    h1, h2, h3, h4, h5, h6 {
+        color: var(--title-color);
+    }
+    p, li {
+        a {
+            color: var(--article-link-color);
+        }
+    }
+    &.content-inner--article {
+        @include article-list-styles(#{functions.remcalc(16)});
+    }
+}
+
+// .content-fields__super-title + .content-fields__subtitle {
+//     margin-top: functions.remcalc(-15);
+// }
+
+@mixin btns--left {
+    --btns-flex-direction: row;
+    --btns-align-items: center;
+    --btns-justify-content: flex-start;
+    --btn-width: auto;
+    --link-btn-padding-y: 0;
+}
+
+@mixin btns--center {
+    --btns-flex-direction: row;
+    --btns-align-items: center;
+    --btns-justify-content: center;
+    --btn-width: auto;
+    --link-btn-padding-y: 0;
+}
+
+// full-width stacked,
+// for mobile in many places, also in cards sometimes
+@mixin btns--stacked-full {
+    --btns-flex-direction: column;
+    --btns-align-items: center;
+    --btns-justify-content: center;
+    --btn-width: 100%;
+    --link-btn-padding-y: #{functions.remcalc(12)};
+}
+
+@mixin btns--stacked-center {
+    --btns-flex-direction: column;
+    --btns-align-items: center;
+    --btns-justify-content: flex-start;
+    --btn-width: auto;
+    --link-btn-padding-y: #{functions.remcalc(12)};
+}
+
+// content fields alignment needs to change for desktop/mobile,
+// and for titles, description, and buttons.
+// for example, in top content, most of the time, on mobile,
+// titles are centered, content is left, and buttons are stacked and
+// full width, but sometimes it changes. See also align-buttons-desktop--
+// and align-buttons-mobile-- classes (buttons.scss).
+// also FieldsBuilder::parseColorOptions, and FieldsBuilder::parseAlignmentOptions
+.content-fields {
+    &__super-title {
+        color: var(--super-title-color-override, var(--super-title-color));
+        margin-top: functions.remcalc(-3);
+        margin-bottom: functions.remcalc(-8);
+    }
+    &__title {
+        color: var(--title-color-override, var(--title-color));
+    }
+    &__subtitle {
+        color: var(--subtitle-color-override, var(--super-title));
+    }
+    &__title + .content-fields__subtitle {
+        padding-top: var(--content-spacing-title-subtitle);
+    }
+    &__super-title, &__title, &__subtitle {
+        text-align: var(--align-titles-mobile, inherit);
+        @include media-queries.for-tablet-up {
+            text-align: var(--align-titles-desktop, inherit);
+        }
+    }
+    &__description {
+        text-align: var(--align-content-mobile, inherit);
+        @include media-queries.for-tablet-up {
+            text-align: var(--align-content-desktop, inherit);
+        }
+    }
+}
+
+// Text align center - desktop only
+.content-tac {
+    @include media-queries.for-laptop-up {
+        @include btns--center;
+        text-align: center;
+        > img {
+            align-self: center;
+        }
+    }
+}
+
+.content-tac-mobile {
+    @include media-queries.for-laptop-down {
+        @include btns--center;
+        text-align: center;
+        > img {
+            align-self: center;
+        }
+    }
+}
+
+.top-content {
+    > .btns {
+        margin-top: var(--top-content-btn-margin, 0);
+    }
+}
+
+.content-fields {
+    @include media-queries.for-tablet-down {
+        @include btns--stacked-full;
+    }
+}
+
+// defaults for top/bottom content
+.top-content, .bottom-content {
+    --align-titles-desktop: center;
+    --align-content-desktop: center;
+    --align-titles-mobile: center;
+    --align-content-mobile: left;
+    @include btns--stacked-full;
+    @include media-queries.for-tablet-up {
+        @include btns--center;
+    }
+    .content-fields__title {
+        text-wrap: balance;
+    }
+}
+
+// needs to be after we define top/bottom content defaults
+.align-buttons-desktop--left, .align-buttons-mobile--left {
+    @include btns--left;
+}
+
+.align-buttons-desktop--center, .align-buttons-mobile--center {
+    @include btns--center;
+}
+
+.align-buttons-desktop--stacked-full, .align-buttons-mobile--stacked-full {
+    @include btns--stacked-full;
+}
+
+.align-buttons-desktop--stacked-center, .align-buttons-mobile--stacked-center {
+    @include btns--stacked-center;
+}
+
+//==================================================================
+// TYPOGRAPHY CLASSES
+//==================================================================
+@each $colorKey, $color in variables.$colorList {
+
+    // To use: apply class (ex) '.text-brand-blue' to apply that color.
+    // .font-color--#{'' + $colorKey} {
+    //     color: variables.$color;
+    // }
+}
+
+// Note: add these margin and list items styles to editor-style.css as well
+
+// Formats Dropdown styles
+.margin-bottom--sm.margin-bottom--sm.margin-bottom--sm {
+    & + * {
+        padding-top: var(--content-spacing-list-intro);
+    }
+}
+
+.margin-top--sm.margin-top--sm.margin-top--sm {
+    padding-top: var(--content-spacing-list-intro);
+}
+
+// for adding more spacing between p tags mostly
+.margin-top--lg.margin-top--lg.margin-top--lg {
+    padding-top: functions.remcalc(30);
+}
+
+.list-items-intro.list-items-intro {
+    padding-top: var(--content-spacing);
+    & + * {
+        padding-top: var(--content-spacing-list-intro);
+    }
+}

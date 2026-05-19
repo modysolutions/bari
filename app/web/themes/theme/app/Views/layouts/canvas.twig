@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html {{ site.language_attributes }}>
+{% block head %}
+    {% include '@theme/partials/head.twig' %}
+{% endblock %}
+
+<body class="{{ body_class }}">
+{{ function('wp_body_open') }}
+    <div class="wrapper">
+        {% block content %}
+            Sorry, no content
+        {% endblock %}
+    </div>
+{{ function('wp_footer') }}
+{% do action('get_footer') %}
+{% include '@theme/scripts/lazyload.twig' %}
+</body>
+</html>
