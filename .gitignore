@@ -4,6 +4,7 @@
 
 wp_core*
 app/wp/*
+!app/wp/.gitkeep
 app/auth.json
 app/web/plugins
 app/web/debug.log
