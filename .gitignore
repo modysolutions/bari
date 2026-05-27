@@ -2,26 +2,24 @@
 .idea
 .env
 
-wp_core*
-app/wp/*
-!app/wp/.gitkeep
 app/auth.json
+app/logs/*
+app/vendor/*
 app/web/plugins
-app/web/debug.log
+app/web/themes
 app/web/*.md
-!app/web/plugins/omitsis*
-!app/web/plugins/tamarind*
 app/web/uploads
 app/web/dumps
 app/web/license.txt
 app/web/.htaccess
 app/web/readme.html
-app/logs
+app/wp/*
 backups
+!app/wp/.gitkeep
+!app/web/plugins/omitsis*
+!app/web/plugins/tamarind*
+!app/web/themes/theme
 
 config/ssl/*
-db.backup.sql
 
-wp_backup*
-
-/app/web/node_modules/
+node_modules

@@ -155,11 +155,6 @@ define( 'DOMAIN_CURRENT_SITE', $main_network_domain );
 define( 'PATH_CURRENT_SITE', '/' );
 define( 'SITE_ID_CURRENT_SITE', 1 );
 define( 'BLOG_ID_CURRENT_SITE', 1 );
-//
-define( 'COOKIE_DOMAIN', $http_host );
-define( 'COOKIEPATH', '/' );
-define( 'SITECOOKIEPATH', '/' );
-define( 'ADMIN_COOKIE_PATH', '/' );
 
 /* That's all, stop editing! Happy publishing. */
 
