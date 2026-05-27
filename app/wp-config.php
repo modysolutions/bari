@@ -130,13 +130,13 @@ if ($configExtra = getenv_docker('WORDPRESS_CONFIG_EXTRA', '')) {
 
 
 $protocol = 'https://';
-$http_host = getenv_docker('HOST_NAME', 'default.local');
+$http_host = getenv_docker('HOST_NAME', 'auth.tamarindintelligence.local');
 if(php_sapi_name() !== 'cli') {
     if ( isset( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) && strpos( $_SERVER['HTTP_X_FORWARDED_PROTO'], 'https' ) !== false ) {
         $_SERVER['HTTPS'] = 'on';
     }
     $protocol = $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
-    $http_host = $_SERVER['HTTP_HOST'] ?? getenv_docker('HOST_NAME', 'default.local');
+    $http_host = $_SERVER['HTTP_HOST'] ?? getenv_docker('HOST_NAME', 'auth.tamarindintelligence.local');
 }
 
 define( 'WP_HOME', $protocol . $http_host );

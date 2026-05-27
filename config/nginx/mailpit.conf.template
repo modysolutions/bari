@@ -1,12 +1,12 @@
 server {
     listen 80;
-    server_name mail.${HOST_NAME};
+    server_name ${MAIL_HOST};
     return 301 https://$host$request_uri;
 }
 
 server {
     listen 443 ssl;
-    server_name mail.${HOST_NAME};
+    server_name ${MAIL_HOST};
 
     ssl_certificate /etc/nginx/ssl/cert.pem;
     ssl_certificate_key /etc/nginx/ssl/key.pem;

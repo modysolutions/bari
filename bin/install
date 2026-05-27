@@ -11,13 +11,7 @@ source "${ENV_FILE}";
 
 ./bin/certs
 docker compose up -d --build --force-recreate
-cd "${ROOT_DIR}/app" || exit
-rm -rf wp-content
-git clone git@github.com:Tamarind-Tech/wordpress.git wp-content
-cd "${ROOT_DIR}/app/wp-content" || exit
-git reset --hard HEAD
-git checkout develop
-cd "${ROOT_DIR}" || exit
-./bin/composer -d /var/www/html/wp-content config http-basic.plugins.tamarindintelligence.com "${SATISPRESS_KEY}" "satispress"
-./bin/build
-./bin/db pull "${SITE_SLUG}"
+./bin/version ${WORDPRESS_VERSION}
+./bin/composer -d /var/www/html config http-basic.plugins.tamarindintelligence.com "${SATISPRESS_KEY}" "satispress"
+./bin/wp core install --url="${SITE_HOST}" --title="${SITE_TITLE}" --admin_user="${SITE_ADMIN}" --admin_email="${SITE_ADMIN}" --admin_password="${SITE_ADMIN_PASSWD}" --skip-email
+./bin/wp core multisite-convert --title="${SITE_TITLE}" --skip-config --subdomains
