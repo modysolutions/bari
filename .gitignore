@@ -3,11 +3,7 @@
 .env
 
 wp_core*
-app/wp/*.php
-app/wp/wp-admin
-app/wp/wp-includes
-app/wp/wp-*.php
-app/wp/xmlrpc.php
+app/wp/*
 app/auth.json
 app/web/plugins
 app/web/debug.log

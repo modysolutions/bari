@@ -17,10 +17,6 @@
             "type": "composer",
             "url": "https://plugins.tamarindintelligence.com/satispress/"
         },
-        "mody": {
-            "type": "composer",
-            "url": "https://plugins.mody.cloud/satispress/"
-        },
         "wpackagist": {
             "type": "composer",
             "url": "https://wpackagist.org",
@@ -28,8 +24,7 @@
         }
     },
     "require": {
-        "mody/astra": "4.13.1",
-        "mody/astra-addon": "4.13.1",
+        "tamarind/astra-addon": "4.13.1",
         "tamarind/gravityforms": "2.9.24.2",
         "tamarind/gravityformsgoogleanalytics": "2.4.0",
         "tamarind/gravityformsrecaptcha": "2.1.0",
@@ -43,7 +38,7 @@
         "wpackagist-plugin/redirection": "5.6.1",
         "wpackagist-plugin/smart-phone-field-for-gravity-forms": "2.2.0",
         "wpackagist-plugin/ultimate-addons-for-gutenberg": "2.19.26",
-        "mody/theme": "1.0.4",
+        "wpackagist-theme/astra": "4.13.3",
         "timber/timber": "^2.0"
     },
     "require-dev": {
