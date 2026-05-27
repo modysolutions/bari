@@ -23,7 +23,12 @@ services:
       SSH_HOST_STAGE: ${SSH_HOST_STAGE:-stage.test.com}
       CLIENT_MAX_BODY: ${WORDPRESS_MEMORY_LIMIT:-256M}
     networks:
-      - default
+      default:
+        aliases:
+          - auth.tamarindintelligence.local
+          - app.ecigintelligence.local
+          - app.tobaccointelligence.local
+          - app.cannintelligence.local
 
   wordpress:
     container_name: ${CONTAINER_PREFIX:-wp_}app

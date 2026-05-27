@@ -30,6 +30,9 @@ defined( 'ABSPATH' ) || exit;
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\tamarind_base_enqueue_scripts' );
 add_action( 'admin_init', __NAMESPACE__ . '\tamarind_base_admin_init' );
 
+add_filter( 'https_ssl_verify', '__return_false' );
+add_filter( 'https_local_ssl_verify', '__return_false' );
+
 /**
  * Enqueue the styles and scripts
  *
