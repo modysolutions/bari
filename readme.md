@@ -8,6 +8,7 @@ A high-performance, developer-friendly Docker stack designed for local WordPress
 * **Docker & Docker Compose**
 * **mkcert**: Install via `brew install mkcert` (Mac) or `sudo apt install mkcert` (Ubuntu). Run `mkcert -install` once.
 * **Local DNS**: Map your `HOST_NAME` to `127.0.0.1` in your `/etc/hosts` file.
+* **Satispress Key**: Create one on https://plugins.tamarindintelligence.com.
 
 ### 2. Permissions & Environment Setup
 Before running any scripts, you must grant execution permissions to the automation tools:
@@ -19,6 +20,7 @@ sudo chmod +x ./bin/*
 # Initialize environment file
 cp sample.env .env
 ```
+Modify all the variables in .env to match your local setup, especially HOST_NAME and SATISPRESS_KEY
 
 ### 3. Automated Installation
 Run the master installation script from the project root:
@@ -29,12 +31,14 @@ Run the master installation script from the project root:
 
 **What this command does automatically:**
 1.  **SSL Generation**: Runs `./bin/certs` to create locally trusted certificates.
-2.  **Container Launch**: Performs `docker compose up -d --build --force-recreate`.
-3.  **Repo Initialization**: Wipes any existing `wp-content`, clones the Tamarind WordPress repository, and checks out the `develop` branch.
-4.  **Satispress Config**: Configures Composer to authenticate with the internal plugin repository using your `SATISPRESS_KEY`.
-5.  **Build Assets**: Runs `./bin/build` to compile all plugin and theme assets.
-6.  **Database Pull**: Downloads and imports the latest database from the staging server.
-
+2.  **Directory creation**: Creates the `logs` directory for `wp` and `xdebug`.
+3.  **Container Launch**: Performs `docker compose up -d --build --force-recreate`.
+4.  **Updates WordPress**: Updates WordPress core files to the version specified in your `.env` file while preserving the `web`.
+5.  **Satispress Config**: Configures Composer to authenticate with the internal plugin repository using your `SATISPRESS_KEY`.
+6.  **Install dependencies**: `./bin/composer install`.
+7.  **Install WordPress**: If not already installed, it will run `wp multisite-install` with the credentials from your `.env` file.
+8.  **Create Sites**: If the `SITES` variable is defined, it will create those sites in the multisite network and activate the Theme in all of them.
+9.  **Activate Plugins**: If the `PLUGINS` variable is defined, it will install and activate those plugins in all sites of the multisite network.
 ---
 
 ## 🛠 Shell Script Toolbox (`./bin/`)
@@ -44,13 +48,11 @@ The `bin` directory contains proxy and automation scripts that handle complex ta
 | Command | Description | Example Usage |
 | :--- | :--- | :--- |
 | **`./bin/install`** | Performs a full stack deployment, including Git cloning and DB pulling. | `./bin/install` |
-| **`./bin/build`** | Reinstalls `node_modules` and runs Gulp/Build for all themes and plugins. | `./bin/build` |
 | **`./bin/config`** | Safely adds or updates a variable in your `.env` file. | `./bin/config SITE_NAME mysite` |
 | **`./bin/db`** | Imports local SQL or pulls a fresh database dump from remote servers. | `./bin/db pull ei` |
 | **`./bin/composer`** | Runs PHP Composer inside the app container. | `./bin/composer install` |
 | **`./bin/wp`** | Wrapper for WP-CLI using aliases defined in `wp-cli.yml`. | `./bin/wp @ei plugin list` |
 | **`./bin/certs`** | Generates SSL certificates for all local development domains. | `./bin/certs` |
-| **`./bin/to`** | Switches the entire environment context (Domains, Prefix, DB) to a specific site. | `./bin/to ti` |
 | **`./bin/version`**| Updates or downgrades WordPress core files while preserving `wp-content`. | `./bin/version 6.2.2` |
 | **`./bin/log`** | Standardized colored logging utility for scripts. | `./bin/log INFO "Message"` |
 
@@ -60,6 +62,14 @@ The `bin` directory contains proxy and automation scripts that handle complex ta
 ```text
 .
 ├── app/                # WordPress Source Code (Managed by git/scripts)
+│   ├── wp              # Core files (Managed by git, updated via ./bin/version)
+│       ├── wp-admin    # Core admin files
+│       ├── wp-includes # Core includes
+│   ├── web             # Public directory (wp-content, uploads, custom plugins/themes)
+│       ├── plugins     # Plugins go here
+│       ├── themes      # Themes go here
+│   ├── index.php       # Entry point for Nginx
+│   ├── wp-config.php    # Custom configuration file
 ├── bin/                # Master Automation Scripts (Must be +x)
 ├── config/
 │   ├── php/            # Custom .ini files (uploads, mail, redis)
