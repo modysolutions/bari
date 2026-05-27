@@ -22,7 +22,7 @@ server {
     resolver 8.8.8.8 1.1.1.1 valid=300s;
     resolver_timeout 5s;
 
-    location ^~ /content/uploads/ {
+    location ^~ /web/uploads/ {
         try_files $uri @production_proxy;
     }
 
@@ -41,15 +41,9 @@ server {
         add_header X-Proxy-Status "Miss - Fetched from Production";
     }
 
-    location ~ ^/(wp-admin|wp-includes|wp-login\.php|wp-signup\.php|wp-activate\.php|xmlrpc\.php) {
-        root /var/www/html/wp;
-
-        fastcgi_pass wordpress:9000;
-        fastcgi_index index.php;
-        include fastcgi_params;
-
-        fastcgi_param SCRIPT_FILENAME /var/www/html/wp$fastcgi_script_name;
-    }
+    rewrite ^/(wp-admin|wp-includes)/(.*)$ /wp/$1/$2 last;
+    rewrite ^/(wp-[^/]+\.php|xmlrpc\.php)$ /wp/$1 last;
+    rewrite ^/wp-admin$ $scheme://$host$uri/ permanent;
 
     location / {
         try_files $uri $uri/ /index.php?$args;

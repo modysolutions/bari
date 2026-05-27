@@ -3,30 +3,28 @@
 .env
 
 wp_core*
-app/wp-admin
-app/wp-includes
+app/wp/*.php
+app/wp/wp-admin
+app/wp/wp-includes
+app/wp/wp-*.php
+app/wp/xmlrpc.php
 app/auth.json
-app/wp-content/plugins
-app/wp-content/wp-admin
-app/wp-content/wp-includes
-app/wp-content/debug.log
-app/wp-content/*.md
-!app/wp-content/plugins/omitsis*
-!app/wp-content/plugins/tamarind*
-app/wp-content/uploads
-app/dumps
-app/node_modules
-app/wp-*.php
-app/debug.log
-app/license.txt
-app/.htaccess
-app/readme.html
+app/web/plugins
+app/web/debug.log
+app/web/*.md
+!app/web/plugins/omitsis*
+!app/web/plugins/tamarind*
+app/web/uploads
+app/web/dumps
+app/web/license.txt
+app/web/.htaccess
+app/web/readme.html
 app/logs
-app/xmlrpc.php
+backups
 
 config/ssl/*
 db.backup.sql
 
 wp_backup*
 
-/app/wp-content/node_modules/
+/app/web/node_modules/
