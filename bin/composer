@@ -13,7 +13,7 @@ if [ -z "$1" ]; then
   ./bin/log "ERROR" "You need to provide a command (e.g., ./bin/composer install)"
   exit 1
 fi
-./bin/log "INFO" "Running composer command: $*"
+./bin/log "INFO" "composer $*"
 EXEC_FLAGS=()
 if [ -t 0 ] && [ -t 1 ]; then
   EXEC_FLAGS=(-it)

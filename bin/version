@@ -3,6 +3,7 @@
 APP_DIR="./app"
 WP_CORE_DIR="$APP_DIR/wp"
 TEMP_DIR="./wp_tmp"
+BACKUP="${1:-true}"
 BACKUP_PARENT_DIR="./backups"
 BACKUP_DIR="./backups/wp_core_backup_$(date +%Y%m%d_%H%M%S)"
 
@@ -40,12 +41,14 @@ fi
 if [ ! -d "$BACKUP_PARENT_DIR" ]; then
     mkdir -p $BACKUP_PARENT_DIR
 fi
-./bin/log "INFO" "--- Backing up current core files to $BACKUP_DIR ---"
-mkdir -p "$BACKUP_DIR"
-# Added 2>/dev/null to prevent errors if this is a fresh install and the directories don't exist yet
-cp -r "$WP_CORE_DIR/wp-admin" "$WP_CORE_DIR/wp-includes" "$BACKUP_DIR/" 2>/dev/null || true
-cp "$WP_CORE_DIR"/*.php "$BACKUP_DIR/" 2>/dev/null || true
 
+if [ "$BACKUP" != "--no-backup" ]; then
+  ./bin/log "INFO" "--- Backing up current core files to $BACKUP_DIR ---"
+  mkdir -p "$BACKUP_DIR"
+  # Added 2>/dev/null to prevent errors if this is a fresh install and the directories don't exist yet
+  cp -r "$WP_CORE_DIR/wp-admin" "$WP_CORE_DIR/wp-includes" "$BACKUP_DIR/" 2>/dev/null || true
+  cp "$WP_CORE_DIR"/*.php "$BACKUP_DIR/" 2>/dev/null || true
+fi
 ./bin/log "INFO" "--- Replacing core files in $WP_CORE_DIR (excluding wp-content) ---"
 
 rm -rf "$WP_CORE_DIR/wp-admin"

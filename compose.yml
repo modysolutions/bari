@@ -112,6 +112,8 @@ services:
       MARIADB_DATABASE: $DB_NAME
       MARIADB_USER: $DB_USER
       MARIADB_PASSWORD: $DB_PASSWORD
+    env_file:
+      - .env
     healthcheck:
       test: [ "CMD", "healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized" ]
       start_period: 1m

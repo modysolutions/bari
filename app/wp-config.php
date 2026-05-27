@@ -24,16 +24,14 @@
 // (it gets parsed by the upstream wizard in https://github.com/WordPress/WordPress/blob/f27cb65e1ef25d11b535695a660e7282b98eb742/wp-admin/setup-config.php#L356-L392)
 
 // a helper function to lookup "env_FILE", "env", then fallback
-if (!function_exists('getenv_docker')) {
+if ( ! function_exists( 'getenv_docker' ) ) {
 	// https://github.com/docker-library/wordpress/issues/588 (WP-CLI will load this file 2x)
-	function getenv_docker($env, $default) {
-		if ($fileEnv = getenv($env . '_FILE')) {
-			return rtrim(file_get_contents($fileEnv), "\r\n");
-		}
-		else if (($val = getenv($env)) !== false) {
+	function getenv_docker( $env, $default ) {
+		if ( $fileEnv = getenv( $env . '_FILE' ) ) {
+			return rtrim( file_get_contents( $fileEnv ), "\r\n" );
+		} elseif ( ( $val = getenv( $env ) ) !== false ) {
 			return $val;
-		}
-		else {
+		} else {
 			return $default;
 		}
 	}
@@ -41,13 +39,13 @@ if (!function_exists('getenv_docker')) {
 
 // ** Database settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define( 'DB_NAME', getenv_docker('WORDPRESS_DB_NAME', 'wordpress') );
+define( 'DB_NAME', getenv_docker( 'WORDPRESS_DB_NAME', 'wordpress' ) );
 
 /** Database username */
-define( 'DB_USER', getenv_docker('WORDPRESS_DB_USER', 'example username') );
+define( 'DB_USER', getenv_docker( 'WORDPRESS_DB_USER', 'example username' ) );
 
 /** Database password */
-define( 'DB_PASSWORD', getenv_docker('WORDPRESS_DB_PASSWORD', 'example password') );
+define( 'DB_PASSWORD', getenv_docker( 'WORDPRESS_DB_PASSWORD', 'example password' ) );
 
 /**
  * Docker image fallback values above are sourced from the official WordPress installation wizard:
@@ -56,13 +54,13 @@ define( 'DB_PASSWORD', getenv_docker('WORDPRESS_DB_PASSWORD', 'example password'
  */
 
 /** Database hostname */
-define( 'DB_HOST', getenv_docker('WORDPRESS_DB_HOST', 'mysql') );
+define( 'DB_HOST', getenv_docker( 'WORDPRESS_DB_HOST', 'mysql' ) );
 
 /** Database charset to use in creating database tables. */
-define( 'DB_CHARSET', getenv_docker('WORDPRESS_DB_CHARSET', 'utf8mb4') );
+define( 'DB_CHARSET', getenv_docker( 'WORDPRESS_DB_CHARSET', 'utf8mb4' ) );
 
 /** The database collate type. Don't change this if in doubt. */
-define( 'DB_COLLATE', getenv_docker('WORDPRESS_DB_COLLATE', '') );
+define( 'DB_COLLATE', getenv_docker( 'WORDPRESS_DB_COLLATE', '' ) );
 
 /**#@+
  * Authentication unique keys and salts.
@@ -75,14 +73,14 @@ define( 'DB_COLLATE', getenv_docker('WORDPRESS_DB_COLLATE', '') );
  *
  * @since 2.6.0
  */
-define( 'AUTH_KEY',         getenv_docker('WORDPRESS_AUTH_KEY',         '4f9affda1ab56529801dae42548c458395650bf2') );
-define( 'SECURE_AUTH_KEY',  getenv_docker('WORDPRESS_SECURE_AUTH_KEY',  '21b036d787ce2539107d48264333ad4fbb022ccf') );
-define( 'LOGGED_IN_KEY',    getenv_docker('WORDPRESS_LOGGED_IN_KEY',    '0b306815d1cba7f8136ec2b4d6b16f61ed8f74bb') );
-define( 'NONCE_KEY',        getenv_docker('WORDPRESS_NONCE_KEY',        'f1b8b5ac5b73cad19a4a8ce7610c0dfd232a5a17') );
-define( 'AUTH_SALT',        getenv_docker('WORDPRESS_AUTH_SALT',        '7e57cb25ec800c549a4eb6d20427392b831cf5df') );
-define( 'SECURE_AUTH_SALT', getenv_docker('WORDPRESS_SECURE_AUTH_SALT', '5e828a2270610a9a170931b59c131da371e2a1d5') );
-define( 'LOGGED_IN_SALT',   getenv_docker('WORDPRESS_LOGGED_IN_SALT',   '39d8d300113526be805adbeb04c86cc87a1a3d18') );
-define( 'NONCE_SALT',       getenv_docker('WORDPRESS_NONCE_SALT',       'efc226c23ae8a3897fc2479860d18c9a82d88146') );
+define( 'AUTH_KEY', getenv_docker( 'WORDPRESS_AUTH_KEY', '4f9affda1ab56529801dae42548c458395650bf2' ) );
+define( 'SECURE_AUTH_KEY', getenv_docker( 'WORDPRESS_SECURE_AUTH_KEY', '21b036d787ce2539107d48264333ad4fbb022ccf' ) );
+define( 'LOGGED_IN_KEY', getenv_docker( 'WORDPRESS_LOGGED_IN_KEY', '0b306815d1cba7f8136ec2b4d6b16f61ed8f74bb' ) );
+define( 'NONCE_KEY', getenv_docker( 'WORDPRESS_NONCE_KEY', 'f1b8b5ac5b73cad19a4a8ce7610c0dfd232a5a17' ) );
+define( 'AUTH_SALT', getenv_docker( 'WORDPRESS_AUTH_SALT', '7e57cb25ec800c549a4eb6d20427392b831cf5df' ) );
+define( 'SECURE_AUTH_SALT', getenv_docker( 'WORDPRESS_SECURE_AUTH_SALT', '5e828a2270610a9a170931b59c131da371e2a1d5' ) );
+define( 'LOGGED_IN_SALT', getenv_docker( 'WORDPRESS_LOGGED_IN_SALT', '39d8d300113526be805adbeb04c86cc87a1a3d18' ) );
+define( 'NONCE_SALT', getenv_docker( 'WORDPRESS_NONCE_SALT', 'efc226c23ae8a3897fc2479860d18c9a82d88146' ) );
 // (See also https://wordpress.stackexchange.com/a/152905/199287)
 
 /**#@-*/
@@ -99,7 +97,7 @@ define( 'NONCE_SALT',       getenv_docker('WORDPRESS_NONCE_SALT',       'efc226c
  *
  * @link https://developer.wordpress.org/advanced-administration/wordpress/wp-config/#table-prefix
  */
-$table_prefix = getenv_docker('WORDPRESS_TABLE_PREFIX', 'wp_');
+$table_prefix = getenv_docker( 'WORDPRESS_TABLE_PREFIX', 'wp_' );
 
 /**
  * For developers: WordPress debugging mode.
@@ -113,31 +111,35 @@ $table_prefix = getenv_docker('WORDPRESS_TABLE_PREFIX', 'wp_');
  *
  * @link https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/
  */
-define( 'WP_DEBUG', !!getenv_docker('WORDPRESS_DEBUG', '') );
+define( 'WP_DEBUG', ! ! getenv_docker( 'WORDPRESS_DEBUG', '' ) );
 
 /* Add any custom values between this line and the "stop editing" line. */
 
 // If we're behind a proxy server and using HTTPS, we need to alert WordPress of that fact
 // see also https://wordpress.org/support/article/administration-over-ssl/#using-a-reverse-proxy
-if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strpos($_SERVER['HTTP_X_FORWARDED_PROTO'], 'https') !== false) {
+if ( isset( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) && strpos( $_SERVER['HTTP_X_FORWARDED_PROTO'], 'https' ) !== false ) {
 	$_SERVER['HTTPS'] = 'on';
 }
 // (we include this by default because reverse proxying is extremely common in container environments)
 
-if ($configExtra = getenv_docker('WORDPRESS_CONFIG_EXTRA', '')) {
-	eval($configExtra);
+if ( $configExtra = getenv_docker( 'WORDPRESS_CONFIG_EXTRA', '' ) ) {
+	eval( $configExtra );
 }
 
 
-$protocol = 'https://';
-$http_host = getenv_docker('HOST_NAME', 'auth.tamarindintelligence.local');
-if(php_sapi_name() !== 'cli') {
-    if ( isset( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) && strpos( $_SERVER['HTTP_X_FORWARDED_PROTO'], 'https' ) !== false ) {
-        $_SERVER['HTTPS'] = 'on';
-    }
-    $protocol = $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
-    $http_host = $_SERVER['HTTP_HOST'] ?? getenv_docker('HOST_NAME', 'auth.tamarindintelligence.local');
+$protocol  = 'https://';
+$http_host = getenv_docker( 'HOST_NAME', 'auth.tamarindintelligence.local' );
+if ( php_sapi_name() !== 'cli' ) {
+	if ( isset( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) &&
+		 strpos( $_SERVER['HTTP_X_FORWARDED_PROTO'], 'https' ) !== false ) {
+		$_SERVER['HTTPS'] = 'on';
+	}
+	$protocol  = $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
+	$http_host = $_SERVER['HTTP_HOST'] ?? getenv_docker( 'HOST_NAME', 'auth.tamarindintelligence.local' );
 }
+
+$base                = '/';
+$main_network_domain = getenv_docker( 'HOST_NAME', 'auth.tamarindintelligence.local' );
 
 define( 'WP_HOME', $protocol . $http_host );
 define( 'WP_SITEURL', $protocol . $http_host . '/wp' );
@@ -146,15 +148,24 @@ define( 'WP_CONTENT_DIR', __DIR__ . '/web' );
 define( 'WP_CONTENT_URL', $protocol . $http_host . '/web' );
 
 
-define( 'WP_ALLOW_MULTISITE', true );
-define( 'MULTISITE', true );
-define( 'SUBDOMAIN_INSTALL', true );
-$base = '/';
-$main_network_domain = getenv_docker('HOST_NAME', 'auth.tamarindintelligence.local');
-define( 'DOMAIN_CURRENT_SITE', $main_network_domain );
-define( 'PATH_CURRENT_SITE', '/' );
-define( 'SITE_ID_CURRENT_SITE', 1 );
-define( 'BLOG_ID_CURRENT_SITE', 1 );
+$allow_ms          = filter_var( getenv_docker( 'WORDPRESS_ALLOW_MULTISITE', true ), FILTER_VALIDATE_BOOLEAN );
+$is_ms             = filter_var( getenv_docker( 'WORDPRESS_MULTISITE', true ), FILTER_VALIDATE_BOOLEAN );
+$subdomain_install = filter_var( getenv_docker( 'WORDPRESS_SUBDOMAIN_INSTALL', true ), FILTER_VALIDATE_BOOLEAN );
+
+define( 'WP_ALLOW_MULTISITE', $allow_ms );
+define( 'MULTISITE', $is_ms );
+define( 'SUBDOMAIN_INSTALL', $subdomain_install );
+
+if ( MULTISITE ) {
+	define( 'DOMAIN_CURRENT_SITE', $main_network_domain );
+	define( 'PATH_CURRENT_SITE', '/' );
+	define( 'SITE_ID_CURRENT_SITE', 1 );
+	define( 'BLOG_ID_CURRENT_SITE', 1 );
+	define( 'COOKIE_DOMAIN', $http_host );
+	define( 'ADMIN_COOKIE_PATH', '/' );
+	define( 'COOKIEPATH', '/' );
+	define( 'SITECOOKIEPATH', '/' );
+}
 
 /* That's all, stop editing! Happy publishing. */
 

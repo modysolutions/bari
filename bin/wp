@@ -28,6 +28,5 @@ if [ -t 0 ]; then
 else
     TTY_FLAG="-i"
 fi
-./bin/log "INFO" "Running wp $* in container $CONTAINER_NAME"
-./bin/log "INFO" "${ALIAS}"
+./bin/log "INFO" "wp $* in container $CONTAINER_NAME"
 docker exec $TTY_FLAG -u www-data "$CONTAINER_NAME" wp "$@"
