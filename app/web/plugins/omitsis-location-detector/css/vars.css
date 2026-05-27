@@ -1,0 +1,5 @@
+:root {
+    --om-loc-color-primary: var(--color-primary, #5D3019); 
+    --om-loc-color-secondary: var(--color-secondary, #A6572E); 
+    --om-loc-color-terciary: var(--color-terciary, #b89f41);
+}

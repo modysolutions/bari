@@ -1,0 +1,133 @@
+/* Favourite Icon */
+.tm-favourite-icon-wrapper {
+    position: relative;
+    display: inline-block;
+    font-size: 12px;
+    line-height: 14px;
+    margin-left: -1em;
+
+    @media (max-width: 800px) {
+        margin-left: 0;
+    }
+}
+
+.tm-favourite-icon-wrapper .tm-favourite-tooltip {
+    position: absolute;
+    z-index: 10;
+    top: -15px;
+    left: 100%;
+
+    display: none;
+
+    padding: 5px 10px;
+    border-radius: 5px;
+
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 14px;
+    color: var(--color-white) !important;
+    text-decoration: none;
+    white-space: nowrap;
+
+    background-color: #000;
+}
+
+.tm-favourite-tooltip:hover {
+    text-decoration: none;
+}
+
+.tm-favourite-icon-wrapper:hover .tm-favourite-tooltip {
+    display: block;
+}
+
+.tm-favourite-icon-wrapper .tm-favourite-tooltip:hover {
+    background-color: #505050;
+}
+
+.tm-favourite-icon {
+    cursor: pointer;
+    box-sizing: content-box;
+    display: inline-block;
+
+    width: 20px;
+    height: 20px;
+
+    color: var(--color-primary);
+
+    transition: all 0.7s;
+}
+
+.tm-favourite-icon:hover svg {
+    opacity: 0.6;
+}
+
+.tm-favourite-icon .tm-heart {
+    width: 100%;
+    height: 100%;
+    margin-bottom: -3px;
+}
+
+/* My Favourites */
+.tm-remove-favourite {
+    cursor: pointer;
+
+    position: absolute;
+    top: 10px;
+    right: 10px;
+
+    transition: all .3s ease;
+}
+
+.tm-remove-favourite:hover {
+    opacity: 0.6;
+}
+
+/* Favourite icon inside thumbnail */
+.favourite-icon-inside,
+.tm-post-card__thumbnail {
+    position: relative;
+}
+
+.favourite-icon-inside .tm-favourite-icon-wrapper,
+.tm-post-card__thumbnail .tm-favourite-icon-wrapper {
+    cursor: pointer;
+
+    position: absolute;
+    z-index: 10;
+    top: 10px;
+    right: 10px;
+
+    transition: all .3s ease;
+}
+
+.favourite-icon-inside .tm-favourite-icon,
+.tm-post-card__thumbnail .tm-favourite-icon {
+    color: var(--color-white);
+    background-color: rgb(0 0 0 / 30%);
+    border-radius: 24px;
+    padding: 5px;
+}
+
+.favourite-icon-inside .tm-favourite-icon-wrapper .tm-favourite-tooltip,
+.tm-post-card__thumbnail .tm-favourite-icon-wrapper .tm-favourite-tooltip {
+    top: 0;
+    right: 23px;
+    left: auto;
+}
+
+.dynamic-url-my-favourites .tm-title {
+    margin-bottom: 2rem;
+}
+
+/* Favourite Icon in the post title */
+.entry-header .tm-favourite-icon {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    right: -13px;
+    bottom: -11px;
+
+    @media (min-width: 801px) {
+        bottom: -3px;
+    }
+}

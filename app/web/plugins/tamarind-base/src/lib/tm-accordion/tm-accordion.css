@@ -1,0 +1,163 @@
+/* Web Component: Accordion Menu */
+tm-accordion {
+    display: block;
+    margin-bottom: 50px;
+}
+
+tm-accordion .accordion-item {
+    border-bottom: 1px solid #cfcfda;
+}
+
+tm-accordion .menu-title, 
+tm-accordion .menu-title-link {
+    cursor: pointer;
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    padding: 10px;
+    border: none;
+
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    text-transform: uppercase;
+    text-transform: none;
+
+    background-color: var(--color-white);
+    outline: none;
+
+    transition: background-color 0.3s;
+}
+
+tm-accordion .menu-title:hover,
+tm-accordion .menu-title-link:hover,
+tm-accordion .menu-title:focus,
+tm-accordion .menu-title-link:focus {
+    color: #333;
+    background-color: var(--color-white);
+}
+
+tm-accordion .menu-title::after,
+tm-accordion .menu-title-link::after {
+    content: '';
+
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%) rotate(135deg);
+
+    display: block;
+
+    width: 8px;
+    height: 8px;
+    border: 2px solid var(--color-secondary);
+    border-bottom: transparent;
+    border-left: transparent;
+
+    transition: transform 0.3s ease-out;
+}
+
+tm-accordion #tm-userarea-logout-link::after,
+tm-accordion .menu-title-link::after {
+    display: none;
+}
+
+tm-accordion .menu-options {
+    overflow: hidden;
+    display: block;
+
+    max-height: 0;
+    padding-left: 15px;
+
+    transition: max-height 0.3s ease-out;
+}
+
+tm-accordion .accordion-item.open .menu-options {
+    margin-bottom: 10px;
+}
+
+tm-accordion .menu-options li {
+    margin: 5px 0;
+    list-style: none;
+}
+
+tm-accordion .menu-options li ul {
+    margin-left: 20px;
+}
+
+tm-accordion .menu-options li a {
+    display: block;
+    font-size: 16px;
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+tm-accordion .menu-options li a:hover {
+    color: var(--color-secondary);
+}
+
+tm-accordion .menu-options li.active a {
+    font-weight: 600;
+}
+
+tm-accordion .accordion-item.open .menu-title {
+    color: var(--color-secondary);
+}
+
+tm-accordion .accordion-item.open .menu-title::after {
+    transform: translateY(-50%) rotate(-45deg);
+}
+
+/* Accordion Pills Style */
+tm-accordion.tm-accordion--pills .accordion-item {
+    margin-bottom: 8px;
+    border: 0;
+}
+
+tm-accordion.tm-accordion--pills .accordion-icon {
+    margin-right: 16px;
+    color: var(--color-secondary);
+}
+
+tm-accordion.tm-accordion--pills .menu-title-link,
+tm-accordion.tm-accordion--pills .menu-title {
+    border-radius: 6px;
+    font-weight: 400;
+    background: var(--color-grey-light);
+}
+
+tm-accordion.tm-accordion--pills .menu-title-link::after, 
+tm-accordion.tm-accordion--pills .menu-title::after {
+    right: 12px;
+    border-color: #333;
+}
+
+tm-accordion.tm-accordion--pills .accordion-item.open .menu-title {
+    color: #333;
+}
+
+tm-accordion.tm-accordion--pills .menu-options {
+    padding: 0;
+}
+
+tm-accordion.tm-accordion--pills .accordion-item.open .menu-options {
+    margin-bottom: 0;
+}
+
+tm-accordion.tm-accordion--pills .menu-options li {
+    margin: 5px 0;
+    padding: 10px 30px;
+    border-radius: 6px;
+
+    list-style: none;
+
+    background: var(--color-background-grey);
+}
+
+tm-accordion.tm-accordion--pills .menu-options li:last-child {
+    margin-bottom: 0;
+}

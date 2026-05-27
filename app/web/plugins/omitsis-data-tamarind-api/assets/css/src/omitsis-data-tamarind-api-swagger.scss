@@ -1,0 +1,20 @@
+#swagger-ui {
+	.topbar {
+		display: none;
+	}
+	.wrapper {
+		section {
+			.float-right {
+				display: none;
+			}
+		}
+	}
+	.scheme-container {
+		.servers-title {
+			display: none;
+		}
+		.servers {
+			display: none;
+		}
+	}
+}

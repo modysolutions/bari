@@ -1,0 +1,270 @@
+@import url("vars.css");
+
+#geo-form-china-modal form,#geo-video-china-modal form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start
+}
+
+#geo-form-china-modal form .contact-form-field,#geo-video-china-modal form .contact-form-field {
+    width: 50%;
+    padding-right: 10px;
+    margin-bottom: 20px
+}
+
+#geo-form-china-modal form .contact-form-field input[type=email],#geo-form-china-modal form .contact-form-field input[type=tel],#geo-form-china-modal form .contact-form-field input[type=text],#geo-form-china-modal form .contact-form-field select,#geo-video-china-modal form .contact-form-field input[type=email],#geo-video-china-modal form .contact-form-field input[type=tel],#geo-video-china-modal form .contact-form-field input[type=text],#geo-video-china-modal form .contact-form-field select {
+    height: 40px;
+    border-radius: 30px;
+    border: 1px solid #ddd;
+    width: 100%;
+    font-size: 1.8rem;
+    font-weight: 300;
+    padding: 0 16px;
+    background-color: #fff;
+    color: #333
+}
+
+#geo-form-china-modal form .contact-form-field p,#geo-video-china-modal form .contact-form-field p {
+    margin: 0;
+    padding: 0;
+    min-height: 0;
+    float: none
+}
+
+#geo-form-china-modal form .contact-form-field .wpcf7-submit,#geo-video-china-modal form .contact-form-field .wpcf7-submit {
+    margin-top: 0
+}
+
+#geo-form-china-modal form .contact-form-field-textarea,#geo-video-china-modal form .contact-form-field-textarea {
+    width: 100%
+}
+
+#geo-form-china-modal form .contact-form-field-textarea textarea,#geo-video-china-modal form .contact-form-field-textarea textarea {
+    border-radius: 20px;
+    border: 1px solid #ddd
+}
+
+#geo-form-china-modal form .contact-form-field-submit p,#geo-video-china-modal form .contact-form-field-submit p {
+    position: relative;
+    background-color: var(--color-terciary);
+    border-radius: 27px;
+    text-transform: none;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 25px 7px 25px
+}
+
+#geo-form-china-modal form .contact-form-field-submit p input,#geo-video-china-modal form .contact-form-field-submit p input {
+    font-size: 16px!important;
+    font-weight: 400!important;
+    line-height: 26px!important;
+    color: #1a211a!important;
+    background: 0 0!important;
+    padding: 0!important;
+    text-decoration: none!important;
+    border: 0!important;
+    text-transform: capitalize
+}
+
+#geo-form-china-modal form .contact-form-field-consent,#geo-video-china-modal form .contact-form-field-consent {
+    width: 100%
+}
+
+#geo-form-china-modal form .contact-form-field-consent p br,#geo-video-china-modal form .contact-form-field-consent p br {
+    display: none
+}
+
+#geo-form-china-modal form .contact-form-field-consent p a,#geo-video-china-modal form .contact-form-field-consent p a {
+    color: var(--color-primary);
+}
+
+#geo-form-china-modal .modal-geo,#geo-video-china-modal .modal-geo {
+    background: #eee;
+    background-image: url(../images/new-design/product-bg-tamarind-logo.png);
+    background-repeat: no-repeat;
+    background-position: right bottom;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 750px;
+    min-height: 550px;
+    position: relative;
+    margin: 60px auto
+}
+
+#geo-form-china-modal .modal-geo .modal-geo-close,#geo-video-china-modal .modal-geo .modal-geo-close {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    opacity: 1;
+    color: var(--color-secondary);
+    font-size: 25px
+}
+
+#geo-form-china-modal .modal-geo .geo-title,#geo-video-china-modal .modal-geo .geo-title {
+    font-size: 21px;
+    line-height: 31px;
+    color: var(--color-primary);
+    font-weight: 700;
+    margin-top: 30px;
+    align-self: flex-start
+}
+
+#geo-form-china-modal .modal-geo .geo-subtitle,#geo-video-china-modal .modal-geo .geo-subtitle {
+    font-size: 18px;
+    line-height: 25px;
+    color: #1a211a;
+    font-weight: 400;
+    margin-bottom: 30px;
+    align-self: flex-start
+}
+
+#geo-form-china-modal .modal-geo p,#geo-video-china-modal .modal-geo p {
+    font-size: 14px;
+    line-height: 20px;
+    color: #042122;
+    font-weight: 400
+}
+
+#geo-form-china-modal .modal-geo .btn-primary-download,#geo-video-china-modal .modal-geo .btn-primary-download {
+    padding: 15px 40px
+}
+
+#geo-form-china-modal .modal-geo .geo-image,#geo-video-china-modal .modal-geo .geo-image {
+    width: 100%;
+    margin-bottom: 50px
+}
+
+#geo-form-china-modal .modal-geo .geo-image .geo-content-image,#geo-video-china-modal .modal-geo .geo-image .geo-content-image {
+    margin: 20px
+}
+
+#geo-form-china-modal .modal-geo .geo-image img,#geo-video-china-modal .modal-geo .geo-image img {
+    width: 100%;
+    height: auto
+}
+
+#geo-form-china-modal .modal-geo .geo-image iframe,#geo-video-china-modal .modal-geo .geo-image iframe {
+    height: 390px;
+}
+
+.geo-button-download-link {
+    position: relative;
+    padding: 15px 25px 15px 25px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 26px;
+    color: #16163a;
+    background-color: var(--color-terciary);
+    border-radius: 27px;
+    text-decoration: none!important;
+}
+
+.geo-widget-china {
+    position: fixed;
+    bottom: 100px;
+    right: -210px;
+    z-index: 9999;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* transition: all .4s ease-in-out; */
+    transition: right 1.3s ease 0s;
+    z-index: 10;
+}
+
+.geo-widget-china-qr {
+    bottom: 165px;
+    right: 0;
+    display: flex;
+    align-items: flex-end;
+}
+
+.geo-widget-china-qr .china-widget-qr {
+    width: 140px;
+    display: none;
+    background: #fff;
+    padding: 7px 7px 0px;
+    margin-right: 10px;
+}
+
+.geo-widget-china .china-widget-link {
+    max-width: 600px;
+    background: #edeefa;
+    padding: 0 20px;
+    width: 210px;
+}
+
+.geo-widget-china .china-widget-link a {
+    color: var(--color-primary);
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+}
+
+.geo-widget-china .china-widget-link a .fa {
+    margin: 0 15px;
+    font-size: 24px;
+    color: var(--color-terciary);
+}
+
+.geo-widget-china .china-widget-icon {
+    background: var(--color-secondary);
+    width: 60px;
+    height: 60px;
+    border-radius: 12px 0px 0px 12px;
+    padding: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.geo-widget-china .china-widget-icon img {
+    max-width: 40px;
+    max-height: 40px;
+}
+
+@media(max-width:768px) {
+    #geo-form-china-modal .modal-geo,#geo-video-china-modal .modal-geo {
+        width: 100%;
+    }
+}
+
+@media(max-width:400px) {
+    #geo-form-china-modal form .contact-form-field, #geo-video-china-modal form .contact-form-field {
+        width: 100%;
+    }
+    #geo-form-china-modal form .contact-form-field input[type=email], 
+    #geo-form-china-modal form .contact-form-field input[type=tel], 
+    #geo-form-china-modal form .contact-form-field input[type=text], 
+    #geo-form-china-modal form .contact-form-field select, 
+    #geo-video-china-modal form .contact-form-field input[type=email], 
+    #geo-video-china-modal form .contact-form-field input[type=tel], 
+    #geo-video-china-modal form .contact-form-field input[type=text], 
+    #geo-video-china-modal form .contact-form-field select {
+        width: 100%!important;
+    }
+
+    #geo-form-china-modal .modal-geo, #geo-video-china-modal .modal-geo {
+        min-height: 300px;
+    }
+
+    #geo-form-china-modal .modal-geo .geo-image iframe,
+    #geo-video-china-modal .modal-geo .geo-image iframe {
+        height: auto;
+    }
+
+    #geo-form-china-modal .modal-geo .geo-image, 
+    #geo-video-china-modal .modal-geo .geo-image {
+        margin-bottom: 0;
+    }
+}

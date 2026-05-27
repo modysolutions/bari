@@ -1,0 +1,345 @@
+.tm-form_wrapper {
+    --gf-form-gap-x: 15px !important;
+    --gf-form-gap-y: 15px !important;
+
+    padding: 30px;
+    border-radius: 6px;
+    background: var(--color-forms-background);
+}
+
+.tm-form_wrapper h2,
+.tm-form_wrapper p,
+.tm-form_wrapper label,
+.tm-form_wrapper .tm-phone {
+    font-size: 16px;
+    color: var(--color-forms-text) !important;
+}
+
+.tm-form_wrapper h2 {
+    font-size: 23px;
+}
+
+.tm-form_wrapper a {
+    color: var(--color-forms-input) !important;
+    text-decoration: none !important;
+}
+
+.tm-form_wrapper a:hover {
+    color: var(--color-forms-input) !important;
+    text-decoration: underline !important;
+}
+
+.tm-form_wrapper form input,
+.tm-form_wrapper form select,
+.tm-form_wrapper form textarea {
+    width: 100% !important;
+    padding: 11px 20px !important;
+    border: 0 !important;
+    border-radius: 6px !important;
+
+    font-size: 16px !important;
+    color: var(--color-forms-input) !important;
+
+    background-color: #fff !important;
+    box-shadow: 0 0 10px 0 rgb(0 0 0 / 10%) !important;
+}
+
+.tm-form_wrapper form input,
+.tm-form_wrapper form select {
+    height: auto !important;
+}
+
+.tm-form_wrapper form select {
+    max-height: 60px;
+}
+
+.tm-form_wrapper form input[type="tel"] {
+    margin-left: 0 !important;
+    padding-right: 6px !important;
+    padding-left: 85px !important;
+}
+
+.tm-form_wrapper .iti__flag-container {
+    width: 100px;
+    padding: 0;
+}
+
+.tm-form_wrapper .iti__flag-container .iti__selected-flag {
+    border-radius: 6px 0 0 6px;
+}
+
+.tm-form_wrapper .gfield .iti.iti--allow-dropdown input.iti__tel-input {
+    padding-left: 115px !important;
+}
+
+body .gform_wrapper .tm-form .gfield button.iti__selected-country {
+    height: 100% !important;
+    padding-right: 10px !important;
+}
+
+body .gform_wrapper .tm-form .gfield .iti .iti__selected-dial-code {
+    font-size: 16px;
+}
+
+.tm-form_wrapper form input[type="checkbox"] {
+    padding: 0 !important;
+    border: 1px solid !important;
+    border-radius: 3px !important;
+
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+
+.tm-form_wrapper form input[type="radio"] {
+    padding: 0 !important;
+    border: 1px solid !important;
+    border-radius: 50% !important;
+
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+
+.tm-form_wrapper form input[type="submit"],
+.tm-form_wrapper form input[type="submit"]:disabled,
+.tm-form_wrapper form input[type="submit"]:hover:disabled {
+    position: relative !important;
+
+    display: inline-block !important;
+
+    width: auto !important;
+    padding: 10px 60px 10px 30px !important;
+    border: 1px solid transparent !important;
+    border-radius: 5px !important;
+
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    line-height: 26px !important;
+    color: var(--color-forms-button-text) !important;
+    text-decoration: none !important;
+
+    background-color: var(--color-terciary) !important;
+    background-image: url("../../assets/images/button-arrow-right-1.svg");
+    background-repeat: no-repeat;
+    background-position: 79% 46%;
+    background-size: 16px;
+    box-shadow: none !important;
+
+    transition: all .3s ease-in-out !important;
+}
+
+.tm-form_wrapper form input[type="submit"]:hover {
+    color: var(--color-forms-button-text) !important;
+
+    background-color: #F6EE9E !important;
+    background-image: url("../../assets/images/button-arrow-right-2.svg");
+    background-repeat: no-repeat;
+    background-position: 79% 46%;
+    background-position: 82% 46%;
+}
+
+.tm-form_wrapper form input[type="submit"]:disabled,
+.tm-form_wrapper form input[type="submit"]:hover:disabled {
+    cursor: not-allowed !important;
+    opacity: 0.5 !important;
+}
+
+.tm-form_wrapper .gform_required_legend {
+    display: none;
+}
+
+.tm-form_wrapper .gfield--type-choice .ginput_container_consent {
+    display: inline;
+}
+
+.tm-form_wrapper .gfield--type-choice .ginput_container_consent input {
+    float: left;
+    width: 20px !important;
+    height: 20px !important;
+}
+
+.tm-form_wrapper .gfield--type-choice .ginput_container_consent label {
+    margin-left: 10px;
+}
+
+/* Form Styles */
+.tm-form_wrapper.tm-form-style-border-box_wrapper {
+    padding: 30px 50px !important;
+    border: 2px solid var(--color-grey-light) !important;
+    border-radius: 10px;
+    background: transparent;
+}
+
+.tm-form_wrapper.tm-form-style-border-box_wrapper label {
+    font-size: 18px !important;
+}
+
+.tm-form_wrapper.tm-form-style-border-box_wrapper textarea {
+    width: 100% !important;
+    min-height: 135px;
+    margin-top: 2rem;
+    border-radius: 10px;
+
+    background-color: var(--color-grey-light)
+}
+
+.tm-form_wrapper.tm-form-style-border-box_wrapper form input[type="submit"]:hover {
+    color: var(--color-forms-button-text) !important;
+    background-image: url("../../assets/images/button-arrow-right-2.svg");
+    background-position: 82% 46%;
+}
+
+.tm-form_wrapper.tm-form-style-minimal_wrapper {
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent;
+}
+
+.module-cform-dark .tm-form_wrapper.tm-form-style-minimal_wrapper input[type="checkbox"] {
+    border-color: #fff !important
+}
+
+.module-cform-dark .tm-form_wrapper.tm-form-style-minimal_wrapper h2,
+.module-cform-dark .tm-form_wrapper.tm-form-style-minimal_wrapper p,
+.module-cform-dark .tm-form_wrapper.tm-form-style-minimal_wrapper label,
+.module-cform-dark .tm-form_wrapper.tm-form-style-minimal_wrapper a {
+    color: #fff !important;
+}
+
+.module-cform-dark .gform_confirmation_message,
+.module-downloadform-dark .gform_confirmation_message,
+.block-content-case-solution .gform_confirmation_message {
+    color: #fff !important;
+}
+
+.tm-form_wrapper.tm-form-style-default-column_wrapper .gform-grid-row {
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.tm-form_wrapper.tm-form-style-default-column_wrapper .gfield--width-half {
+    grid-column: 1/-1;
+}
+
+/* Rating article form */
+.rating-container .gfield_radio {
+    flex-direction: row !important;
+}
+
+.rating-container .gfield_radio .gchoice {
+    cursor: pointer;
+
+    position: relative;
+
+    display: inline-block;
+
+    width: 35px;
+    height: 40px;
+}
+
+.rating-container .gfield_radio .gchoice input,
+.rating-container .gfield_radio .gchoice label {
+    display: none;
+}
+
+.rating-container .gfield_radio .gchoice::after {
+    content: "\f006";
+
+    display: block;
+
+    font-family: fontawesome;
+    font-size: 40px;
+    line-height: 45px;
+    color: var(--color-grey-light);
+    text-align: center;
+}
+
+.rating-container .gfield_radio .gchoice.selected::after {
+    content: "\f005";
+    color: var(--color-terciary);
+}
+
+/* Page Template Login & Password */
+.page-template-page-template-login-password .gform_confirmation_wrapper {
+    min-height: 200px;
+}
+
+.page-template-page-template-login-password .content {
+    float: none;
+
+    width: 100%;
+    min-width: auto;
+    margin: 0 auto;
+    margin-bottom: 50px;
+}
+
+.page-template-page-template-login-password p.wp-login-links {
+    margin-top: 20px;
+    margin-bottom: 0;
+    font-size: 15px;
+}
+
+.page-template-page-template-login-password p.wp-login-links a:hover {
+    text-decoration: none;
+}
+
+@media (width >=768px) {
+
+    .page-template-page-template-login-password .content {
+        width: 50%;
+    }
+}
+
+/* WP Longin form */
+.tm-form_wrapper form#loginform p.login-username,
+.tm-form_wrapper form#loginform p.login-password {
+    margin-bottom: 15px;
+}
+
+.tm-form_wrapper form#loginform p.login-remember {
+    margin-bottom: 24px;
+}
+
+.tm-form_wrapper form#loginform p.login-remember label {
+    font-size: 14px;
+}
+
+.tm-form_wrapper form#loginform input[type="checkbox"] {
+    width: 20px !important;
+    height: 20px !important;
+    margin-right: 5px;
+}
+
+
+/* Redirect confirmation */
+.redirect-confirmation {
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 5px;
+    background: var(--color-white-aux);
+}
+
+/* Login and Register forms for WooCommerce Shop. */
+#customer_login.with-divider {
+    margin-left: -25px;
+    margin-right: -25px;
+    --gap: 0;
+}
+
+#customer_login.with-divider>* {
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+#customer_login.with-divider>div:nth-child(n+2) {
+    border-left: 1px solid var(--color-light-background);
+}
+
+#customer_login .col-1,
+#customer_login .col-2 {
+    margin-bottom: 50px;
+}
+
+#customer_login .tm-form_wrapper {
+    margin: 20px 0;
+}

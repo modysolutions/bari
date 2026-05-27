@@ -1,0 +1,15 @@
+{
+    "name": "omitsis/omitsis-location-detector",
+    "description": "WordPress plugin implementing Implements utilities to detect browser language and IP based location",
+    "type": "wordpress-plugin",
+    "require": {
+        "ip2location/ip2location-php": "^8.3"
+    },
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Choan Gálvez",
+            "email": "cgalvez@omitsis.com"
+        }
+    ]
+}

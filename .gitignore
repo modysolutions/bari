@@ -5,7 +5,7 @@
 app/auth.json
 app/logs/*
 app/vendor/*
-app/web/plugins
+app/web/plugins/*
 app/web/themes
 app/web/*.md
 app/web/uploads
