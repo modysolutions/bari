@@ -9,6 +9,7 @@ app/vendor/*
 app/web/.htaccess
 app/web/advanced-cache.php
 app/web/cache
+app/web/ewww
 app/web/license.txt
 app/web/omitsis-logs
 app/web/plugins/*

@@ -4,7 +4,7 @@ const defaults = require( '@wordpress/scripts/config/webpack.config.js' );
 module.exports = {
     ...defaults,
     entry: {
-        search: path.resolve( process.cwd(), 'plugins/tamarind-search/src', 'app.js' ),
+        theme: path.resolve( process.cwd(), 'src', 'app.js' ),
     },
     module: {
         ...defaults.module,
