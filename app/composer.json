@@ -15,7 +15,7 @@
     "repositories": {
         "tamarind": {
             "type": "composer",
-            "url": "https://plugins.tamarindintelligence.com/satispress/"
+            "url": "https://plugins.mody.cloud/satispress/"
         },
         "wpackagist": {
             "type": "composer",
@@ -24,13 +24,10 @@
         }
     },
     "require": {
-        "tamarind/astra-addon": "4.13.1",
-        "tamarind/gravityforms": "2.9.24.2",
-        "tamarind/gravityformsgoogleanalytics": "2.4.0",
-        "tamarind/gravityformsrecaptcha": "2.1.0",
-        "tamarind/advanced-custom-fields-pro": "6.6.2",
-        "tamarind/wp-mail-smtp-pro": "4.7.1",
-        "tamarind/wordfence": "8.1.4",
+        "mody/astra-addon": "4.13.1",
+        "mody/advanced-custom-fields-pro": "6.6.2",
+        "mody/wp-mail-smtp-pro": "4.7.1",
+        "mody/wordfence": "8.1.4",
         "wpackagist-plugin/wordpress-seo": "26.8",
         "wpackagist-plugin/ewww-image-optimizer": "8.3.1",
         "wpackagist-plugin/user-role-editor": "4.64.6",

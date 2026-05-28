@@ -11,7 +11,7 @@ namespace App;
 
 use App\Hooks\Acf;
 use App\Hooks\Gutenberg;
-use App\Hooks\Mody;
+use App\Hooks\App;
 use App\Hooks\Security;
 use App\Hooks\Theme;
 use App\Hooks\Views;
@@ -38,7 +38,7 @@ if (!is_plugin_active('advanced-custom-fields-pro/acf.php') || !\Timber::class) 
 $gutenberg = new Gutenberg();
 $gutenberg->init();
 
-$mody = new Mody();
+$mody = new App();
 $mody->init();
 
 $security = new Security();

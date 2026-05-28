@@ -1,9 +1,0 @@
-@media (prefers-reduced-motion: no-preference) {
-	:root {
-		scroll-behavior: smooth;
-	}
-}
-
-:target {
-	scroll-margin-top: 50px;
-}
