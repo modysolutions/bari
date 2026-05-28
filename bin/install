@@ -40,6 +40,7 @@ PLUGINS=(
 )
 
 SITES=(
+  "auth.tamarindintelligence.local"
   "app.ecigintelligence.local"
   "app.tobaccointelligence.local"
   "app.cannintelligence.local"
