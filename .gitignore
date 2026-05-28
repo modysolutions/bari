@@ -9,6 +9,7 @@ app/vendor/*
 app/web/.htaccess
 app/web/advanced-cache.php
 app/web/cache
+app/web/ewww
 app/web/license.txt
 app/web/omitsis-logs
 app/web/plugins/*
@@ -16,7 +17,7 @@ app/web/readme.html
 app/web/themes
 app/web/uploads
 app/web/w3tc-config
-app/wweb/wflogs
+app/web/wflogs
 app/web/*.md
 
 app/wp/*
@@ -24,9 +25,10 @@ app/wp/*
 backups
 
 !app/wp/.gitkeep
-!app/web/plugins/omitsis*
-!app/web/plugins/tamarind*
+!app/web/plugins/bari*
 !app/web/themes/theme
+
+**/*/dist
 
 config/ssl/*
 

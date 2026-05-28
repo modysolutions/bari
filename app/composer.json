@@ -1,7 +1,7 @@
 {
-    "name": "tamarind/wp",
+    "name": "app/wp",
     "version": "0.0.1",
-    "description": "WordPress Marketing Sites",
+    "description": "WordPress Sites",
     "autoload": {
         "psr-4": {
             "App\\": "web/themes/theme/app"
@@ -9,14 +9,10 @@
     },
     "authors": [
         {
-            "name": "Tamarind Intelligence"
+            "name": "Mody Solutions"
         }
     ],
     "repositories": {
-        "tamarind": {
-            "type": "composer",
-            "url": "https://plugins.mody.cloud/satispress/"
-        },
         "wpackagist": {
             "type": "composer",
             "url": "https://wpackagist.org",
@@ -24,10 +20,6 @@
         }
     },
     "require": {
-        "mody/astra-addon": "4.13.1",
-        "mody/advanced-custom-fields-pro": "6.6.2",
-        "mody/wp-mail-smtp-pro": "4.7.1",
-        "mody/wordfence": "8.1.4",
         "wpackagist-plugin/wordpress-seo": "26.8",
         "wpackagist-plugin/ewww-image-optimizer": "8.3.1",
         "wpackagist-plugin/user-role-editor": "4.64.6",
