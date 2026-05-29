@@ -128,44 +128,24 @@ if ( $configExtra = getenv_docker( 'WORDPRESS_CONFIG_EXTRA', '' ) ) {
 
 
 $protocol  = 'https://';
-$http_host = getenv_docker( 'HOST_NAME', 'auth.tamarindintelligence.local' );
+$http_host = getenv_docker( 'HOST_NAME', 'default.local' );
 if ( php_sapi_name() !== 'cli' ) {
 	if ( isset( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) &&
 		 strpos( $_SERVER['HTTP_X_FORWARDED_PROTO'], 'https' ) !== false ) {
 		$_SERVER['HTTPS'] = 'on';
 	}
 	$protocol  = $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
-	$http_host = $_SERVER['HTTP_HOST'] ?? getenv_docker( 'HOST_NAME', 'auth.tamarindintelligence.local' );
+	$http_host = $_SERVER['HTTP_HOST'] ?? getenv_docker( 'HOST_NAME', 'default.local' );
 }
 
 $base                = '/';
-$main_network_domain = getenv_docker( 'HOST_NAME', 'auth.tamarindintelligence.local' );
+$main_network_domain = getenv_docker( 'HOST_NAME', 'default.local' );
 
 define( 'WP_HOME', $protocol . $http_host );
 define( 'WP_SITEURL', $protocol . $http_host . '/wp' );
 
 define( 'WP_CONTENT_DIR', __DIR__ . '/web' );
 define( 'WP_CONTENT_URL', $protocol . $http_host . '/web' );
-
-
-$allow_ms          = filter_var( getenv_docker( 'WORDPRESS_ALLOW_MULTISITE', true ), FILTER_VALIDATE_BOOLEAN );
-$is_ms             = filter_var( getenv_docker( 'WORDPRESS_MULTISITE', true ), FILTER_VALIDATE_BOOLEAN );
-$subdomain_install = filter_var( getenv_docker( 'WORDPRESS_SUBDOMAIN_INSTALL', true ), FILTER_VALIDATE_BOOLEAN );
-
-define( 'WP_ALLOW_MULTISITE', $allow_ms );
-define( 'MULTISITE', $is_ms );
-define( 'SUBDOMAIN_INSTALL', $subdomain_install );
-
-if ( MULTISITE ) {
-	define( 'DOMAIN_CURRENT_SITE', $main_network_domain );
-	define( 'PATH_CURRENT_SITE', '/' );
-	define( 'SITE_ID_CURRENT_SITE', 1 );
-	define( 'BLOG_ID_CURRENT_SITE', 1 );
-	define( 'COOKIE_DOMAIN', $http_host );
-	define( 'ADMIN_COOKIE_PATH', '/' );
-	define( 'COOKIEPATH', '/' );
-	define( 'SITECOOKIEPATH', '/' );
-}
 
 /* That's all, stop editing! Happy publishing. */
 
