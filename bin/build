@@ -3,49 +3,72 @@
 ENV_MODE=${1:-stage}
 ROOT_DIR=$(pwd)
 
-GULP_PATHS=(
-    "app/wp-content/plugins/tamarind-base/"
-    "app/wp-content/plugins/tamarind-favourites/"
-    "app/wp-content/plugins/tamarind-forms/"
-    "app/wp-content/plugins/tamarind-notifications/"
-    "app/wp-content/plugins/tamarind-search/"
-    "app/wp-content/plugins/tamarind-user-area/"
-    "app/wp-content/plugins/tamarind-user-home/"
-    "app/wp-content/plugins/tamarind-company-news/"
-    "app/wp-content/plugins/tamarind-events/"
-    "app/wp-content/plugins/tamarind-reports/"
-    "app/wp-content/plugins/tamarind-subscriptions/"
-    "app/wp-content/themes/ecig-intelligence-theme"
-    "app/wp-content/themes/tobacco-intelligence-theme"
-    "app/wp-content/themes/cann-intelligence-theme"
-    "app/wp-content/themes/tamarind-intelligence-theme"
-)
-
 if [ "$ENV_MODE" == "prod" ]; then
     COMPOSER_FLAGS="--no-dev --optimize-autoloader"
 else
     COMPOSER_FLAGS="--optimize-autoloader"
 fi
 
-for DIR in "${GULP_PATHS[@]}"; do
-    ./bin/log "INFO" "Processing assets in $DIR using $ENV_MODE mode..."
-    cd "$DIR" || exit
-    rm -rf ./node_modules
-    npm install
-    if [ -f "./node_modules/.bin/gulp" ]; then
-        ./node_modules/.bin/gulp build
-    else
-        npx gulp build
+# ─── Root theme assets (wp-scripts via pnpm) ─────────────────────────────────
+./bin/log "INFO" "Building root theme assets in $ENV_MODE mode..."
+if [ "$ENV_MODE" == "prod" ]; then
+    pnpm run build
+else
+    pnpm run build --mode=development
+fi
+
+# ─── Auto-discover plugins / themes with their own build script ──────────────
+# Any directory under app/web/plugins/ or app/web/themes/ that contains a
+# package.json with a "build" script will be built automatically.
+BUILD_DIRS=(
+    "app/web/plugins"
+    "app/web/themes"
+)
+
+for BASE in "${BUILD_DIRS[@]}"; do
+    if [ ! -d "$ROOT_DIR/$BASE" ]; then
+        continue
     fi
-    cd "$ROOT_DIR" || exit
+
+    for PKG_FILE in "$ROOT_DIR/$BASE"/*/package.json; do
+        DIR=$(dirname "$PKG_FILE")
+
+        # Skip if there is no "build" script in package.json
+        if ! grep -q '"build"' "$PKG_FILE" 2>/dev/null; then
+            continue
+        fi
+
+        ./bin/log "INFO" "Building assets in $DIR using $ENV_MODE mode..."
+        cd "$DIR" || exit
+
+        if [ -f "pnpm-lock.yaml" ]; then
+            pnpm install --frozen-lockfile
+            pnpm run build
+        elif [ -f "package-lock.json" ]; then
+            npm ci
+            npm run build
+        else
+            npm install
+            npm run build
+        fi
+
+        cd "$ROOT_DIR" || exit
+    done
 done
 
-./bin/log "INFO" "Installing root Composer dependencies using $ENV_MODE..."
-./bin/composer install -d /var/www/html/wp-content $COMPOSER_FLAGS
+# ─── Composer (app root) ─────────────────────────────────────────────────────
+./bin/log "INFO" "Installing Composer dependencies ($ENV_MODE)..."
+./bin/composer install $COMPOSER_FLAGS
 
-./bin/log "INFO" "Installing specific plugin dependencies using $ENV_MODE..."
-./bin/composer install -d /var/www/html/wp-content/plugins/omitsis-location-detector $COMPOSER_FLAGS
-./bin/composer install -d /var/www/html/wp-content/plugins/omitsis-tableau $COMPOSER_FLAGS
-./bin/composer install -d /var/www/html/wp-content/plugins/tamarind-pdfs $COMPOSER_FLAGS
+# ─── Per-plugin Composer installs ────────────────────────────────────────────
+# Add any plugin that ships its own composer.json here.
+COMPOSER_PLUGIN_DIRS=()
+
+for PLUGIN_COMPOSER in "${COMPOSER_PLUGIN_DIRS[@]}"; do
+    if [ -f "/var/www/html/$PLUGIN_COMPOSER/composer.json" ]; then
+        ./bin/log "INFO" "Installing Composer deps for $PLUGIN_COMPOSER..."
+        ./bin/composer install -d "/var/www/html/$PLUGIN_COMPOSER" $COMPOSER_FLAGS
+    fi
+done
 
 ./bin/log "SUCCESS" "Build complete."

@@ -35,6 +35,9 @@ if (!is_plugin_active('advanced-custom-fields-pro/acf.php') || !\Timber::class) 
     });
 }
 
+$acf = new Acf();
+$acf->init();
+
 $gutenberg = new Gutenberg();
 $gutenberg->init();
 

@@ -7,6 +7,7 @@ services:
       - "443:443"
     volumes:
       - ./app:/var/www/html
+      - ./logs/nginx:/var/log:ro
       - ./config/nginx/app.conf.template:/etc/nginx/templates/app.conf.template:ro
       - ./config/nginx/mailpit.conf.template:/etc/nginx/templates/mailpit.conf.template:ro
       - ./config/ssl/local-cert.pem:/etc/nginx/ssl/cert.pem:ro
@@ -23,12 +24,7 @@ services:
       SSH_HOST_STAGE: ${SSH_HOST_STAGE:-stage.test.com}
       CLIENT_MAX_BODY: ${WORDPRESS_MEMORY_LIMIT:-256M}
     networks:
-      default:
-        aliases:
-          - auth.tamarindintelligence.local
-          - app.ecigintelligence.local
-          - app.tobaccointelligence.local
-          - app.cannintelligence.local
+      - default
 
   wordpress:
     container_name: ${CONTAINER_PREFIX:-wp_}app
@@ -45,6 +41,7 @@ services:
         - GROUP_ID=${GROUP_ID:-1000}
     volumes:
       - ./app:/var/www/html
+      - ./logs/wordpress:/var/log:ro
       - ./config/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
       - ./config/php/sendmail.ini:/usr/local/etc/php/conf.d/sendmail.ini
       - ./config/php/zzz-mail.ini:/usr/local/etc/php/conf.d/zzz-mail.ini:ro

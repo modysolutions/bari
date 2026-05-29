@@ -1,12 +1,12 @@
 server {
     listen 80;
-    server_name auth.tamarindintelligence.com app.ecigintelligence.com app.tobaccointelligence.com app.cannintelligence.com;
+    server_name ${HOST_NAME};
     return 301 https://$host$request_uri;
 }
 
 server {
     listen 443 ssl;
-    server_name auth.tamarindintelligence.com app.ecigintelligence.com app.tobaccointelligence.com app.cannintelligence.com;
+    server_name ${HOST_NAME};
 
     ssl_certificate /etc/nginx/ssl/cert.pem;
     ssl_certificate_key /etc/nginx/ssl/key.pem;
