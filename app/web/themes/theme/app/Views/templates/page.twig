@@ -1,12 +1,16 @@
-{% extends 'layouts/base.twig' %}
+{% extends '@theme/layouts/base.twig' %}
 
 {% block content %}
-    <div class="content-wrapper">
-        <article class="post-type-{{ post.type }}" id="post-{{ post.id }}">
-            <section class="article-content">
-                <h1 class="article-h1">{{ post.title }}</h1>
-                <div class="article-body">{{ post.content }}</div>
-            </section>
-        </article>
-    </div>
+    {#
+        Block-based page: post.content runs through do_blocks() automatically,
+        so all Gutenberg blocks (core, ACF, Astra) render correctly.
+
+        The .entry-content class enables WordPress's default block gap and
+        alignment styles (.alignfull, .alignwide, .aligncenter).
+    #}
+    <article id="post-{{ post.id }}" class="{{ post.class }}">
+        <div class="entry-content">
+            {{ post.content }}
+        </div>
+    </article>
 {% endblock %}

@@ -26,10 +26,10 @@ docker compose up -d --build --force-recreate --remove-orphans
 ./bin/composer install
 
 if [ $? -eq 0 ]; then
-    ./bin/log "INFO" "Infraestructura y Composer instalados con éxito. Evaluando tipo de instalación..."
+    ./bin/log "INFO" "Stack installed successfully..."
 
     if [ "${TYPE}" == "multisite" ]; then
-        ./bin/log "INFO" "Iniciando instalación en modo WordPress Multisite..."
+        ./bin/log "INFO" "Installing multisite..."
         ./bin/wp core multisite-install \
             --url="${HOST_NAME}" \
             --title="${SITE_TITLE}" \
@@ -38,11 +38,17 @@ if [ $? -eq 0 ]; then
             --admin_password="${SITE_ADMIN_PASSWD}" \
             --skip-email
     else
-        ./bin/log "INFO" "Ejecutando instalación estándar (Single Site)..."
-        # Aquí puedes añadir el comando para instación single si lo deseas en el futuro
+        ./bin/log "INFO" "Installing single site..."
+        ./bin/wp core install \
+                    --url="${HOST_NAME}" \
+                    --title="${SITE_TITLE}" \
+                    --admin_user="${SITE_ADMIN}" \
+                    --admin_email="${SITE_ADMIN_EMAIL:-admin@${HOST_NAME}}" \
+                    --admin_password="${SITE_ADMIN_PASSWD}" \
+                    --skip-email
     fi
 else
-    ./bin/log "ERROR" "La instalación de dependencias o Docker falló. Abortando instalación de WordPress."
+    ./bin/log "ERROR" "The installation failed miserably."
     exit 1
 fi
 

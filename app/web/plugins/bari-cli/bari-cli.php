@@ -52,5 +52,6 @@ spl_autoload_register( function ( string $class ): void {
 
 if ( defined( 'WP_CLI' ) && \WP_CLI ) {
     \WP_CLI::add_command( 'migration', CLI\MigrationCommand::class );
+    \WP_CLI::add_command( 'pattern',   CLI\PatternCommand::class );
 }
 

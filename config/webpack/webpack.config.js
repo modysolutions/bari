@@ -1,11 +1,21 @@
 const path = require( 'path' );
 const defaults = require( '@wordpress/scripts/config/webpack.config.js' );
 
+const THEME_DIR = path.resolve( process.cwd(), 'app/web/themes/theme' );
+
 module.exports = {
     ...defaults,
+
     entry: {
-        theme: path.resolve( process.cwd(), 'src', 'app.js' ),
+        app:    path.resolve( process.cwd(), 'src', 'app.js' ),
+        editor: path.resolve( process.cwd(), 'src', 'editor.js' ),
     },
+
+    output: {
+        ...defaults.output,
+        path: path.resolve( THEME_DIR, 'dist' ),
+    },
+
     module: {
         ...defaults.module,
         rules: [
