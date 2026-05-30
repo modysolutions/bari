@@ -1,0 +1,33 @@
+<?php
+
+use BariCli\Migration\AbstractMigration;
+
+return new class extends AbstractMigration {
+
+    public function up(): void
+    {
+        // TODO: implement the migration
+        //
+        // Example – create a table:
+        //
+        // $charset_collate = $this->db->get_charset_collate();
+        //
+        // $this->createTable( "
+        //     CREATE TABLE {$this->db->prefix}example (
+        //         id   bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+        //         name varchar(255)        NOT NULL,
+        //         PRIMARY KEY (id)
+        //     ) {$charset_collate}
+        // " );
+    }
+
+    public function down(): void
+    {
+        // TODO: implement the rollback
+        //
+        // Example – drop the table created above:
+        //
+        // $this->dropTable( $this->db->prefix . 'example' );
+    }
+};
+
