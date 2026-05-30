@@ -44,7 +44,7 @@ theme/
 │   ├── fonts/                     # Custom font files (empty, use CSS @font-face)
 │   ├── images/                    # Static theme images
 │   └── styles/
-│       └── main.css               # Legacy/manual CSS (separate from webpack pipeline)
+│       └── main.css               # Static theme CSS (not compiled by webpack; all custom styles live in src/ at project root)
 └── app/
     ├── Hooks/                     # WordPress hook classes
     │   ├── App.php
@@ -171,7 +171,6 @@ $theme     = new Theme();     $theme->init();
 $views     = new Views();     $views->init();
 ```
 
-> ⚠️ `functions.php` also contains `use App\Hooks\Acf` but `Acf.php` **does not exist on disk**. This causes a PHP fatal error at runtime. See [`docs/09-known-issues.md`](./09-known-issues.md).
 
 ---
 

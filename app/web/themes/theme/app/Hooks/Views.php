@@ -10,7 +10,7 @@ class Views {
     }
 
     function action(): void {
-        if (\Timber::class) {
+        if (class_exists('Timber\Timber')) {
             add_action('timber/context', [$this, 'timber_context']);
             add_filter('timber/twig', [$this, 'timber_twig']);
             add_filter('timber/locations', [$this, 'timber_locations']);

@@ -93,34 +93,13 @@ Runs `docker compose up -d --force-recreate --remove-orphans` and prints the sit
 
 ---
 
-## `./bin/db [command] [database]`
-
-**Database utilities** — pull, download, and import databases from remote servers.
-
-```bash
-./bin/db pull ei      # Download and import from production
-./bin/db download ti  # Download only (no import)
-```
-
-**Commands:**
-- `pull` — Download via rsync from the remote host then import and run `search-replace`
-- `download` — Download only via rsync, skip import
-
-**Database aliases:** `ei`, `ti`, `ci`, `cti` (project-specific, hardcoded in the script)
-
-**Uses variables:** `WORDPRESS_ENVIRONMENT`, `SSH_HOST_PRODUCTION`, `SSH_HOST_STAGE`, `SITE_NAME`, `HOST_NAME`
-
-> ⚠️ The database aliases (`ei`, `ti`, `ci`, `cti`) are hardcoded for a specific project and are not generic. See [`docs/09-known-issues.md`](./09-known-issues.md).
-
----
-
 ## `./bin/version VERSION [--no-backup]`
 
 **Download and install a specific WordPress version** into `app/wp/`.
 
 ```bash
-./bin/version 6.7.2             # Install with backup of current core
-./bin/version 6.7.2 --no-backup  # Install, skip backup
+./bin/version 7.0             # Install with backup of current core
+./bin/version 7.0 --no-backup  # Install, skip backup
 ```
 
 - `$1` = WordPress version (required)
@@ -130,8 +109,11 @@ Runs `docker compose up -d --force-recreate --remove-orphans` and prints the sit
 - Copies root PHP files (`wp-login.php`, `wp-settings.php`, etc.) to `app/wp/`
 - Optionally backs up the current core to `backups/wp_core_backup_{timestamp}/`
 - Cleans up the temp extraction directory
+- Uses `set -o pipefail` so a failed `curl` download is always caught
 
 **Uses variables:** none (path-based)
+
+> ℹ️ The current default `WORDPRESS_VERSION` in `sample.env` is `7.0`, which is the latest stable release.
 
 ---
 
@@ -153,20 +135,19 @@ The script reads `wp-cli.yml` to find the container name for the current `$SITE_
 
 ---
 
-## `./bin/build [mode]`
+## Frontend Build
 
-**Build frontend assets** across the project.
+Frontend assets are **not** compiled through a `bin/` script. Run the following commands directly from the **project root** (where `package.json` lives):
 
 ```bash
-./bin/build          # Stage build (default)
-./bin/build prod     # Production build (Composer --no-dev)
+# Development — watch mode with source maps
+pnpm start
+
+# Production — minified, optimised, no source maps
+pnpm build
 ```
 
-**Sequence:**
-1. Builds root theme assets via `pnpm run build` (or `build --mode=development`)
-2. Auto-discovers any `package.json` with a `"build"` script under `app/web/plugins/` and `app/web/themes/` and builds each
-3. Runs `./bin/composer install` with `--no-dev --optimize-autoloader` (prod) or `--optimize-autoloader` (stage)
-4. Iterates `COMPOSER_PLUGIN_DIRS` for plugins with their own `composer.json` (empty by default)
+Both commands invoke `@wordpress/scripts` with the custom webpack config at `config/webpack/webpack.config.js` and write compiled assets to `app/dist/`. See [`docs/08-frontend-build.md`](./08-frontend-build.md) for full details.
 
 ---
 
@@ -187,20 +168,3 @@ The script reads `wp-cli.yml` to find the container name for the current `$SITE_
 | `SUCCESS` | Green |
 | `WARNING` | Yellow |
 | `ERROR` | Red |
-
----
-
-## `./bin/pnpm [command]`
-
-**Proxy to pnpm.** Intended to run pnpm commands against the project.
-
-> ⚠️ This script has two bugs: it uses a wrong hardcoded path (`app/wp-content`) and has a broken empty-string check. See [`docs/09-known-issues.md`](./09-known-issues.md). Use `pnpm` directly from the project root instead.
-
----
-
-## Scripts Not Present
-
-The following script is referenced in documentation but **does not exist on disk**:
-
-- `./bin/to` — Referenced as "open a shell in a container" but the file is not present. Use `docker exec -it {container_name} sh` directly.
-

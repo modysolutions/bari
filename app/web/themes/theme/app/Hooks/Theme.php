@@ -26,7 +26,6 @@ class Theme {
             'post_status' => 'publish',
             'post_author' => 1,
             'post_name' => '',
-            'page_template' => 'home.php'
         );
         $post_id = wp_insert_post($home_page);
         update_option('page_on_front', $post_id);

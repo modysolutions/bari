@@ -22,9 +22,9 @@ All configuration — database credentials, WordPress constants, SMTP, memory li
 ```
 bari/
 ├── app/          → WordPress application (plugins, themes, content)
-├── bin/          → CLI proxy scripts (composer, wp, install, certs, db…)
+├── bin/          → CLI proxy scripts (composer, wp, install, certs, version…)
 ├── config/       → Infrastructure config (Dockerfile, Nginx, PHP, Webpack)
-├── src/          → Frontend source (JS + SCSS, compiled into the theme)
+├── src/          → Frontend source (JS + SCSS, compiled into app/dist/)
 ├── compose.yml   → Docker service orchestration
 └── sample.env    → Environment variable template
 ```
@@ -51,9 +51,44 @@ Every day-to-day operation has a shell script in `bin/` that proxies transparent
 ./bin/wp plugin list  # Run WP-CLI commands
 ./bin/composer install  # Run Composer
 ./bin/certs           # Regenerate SSL certs
-./bin/version 6.7.2   # Install a specific WordPress core version
-./bin/db pull         # Pull a database from a remote server
+./bin/version 7.0     # Install a specific WordPress core version
 ```
+
+Frontend assets are built directly from the project root using `pnpm` (no `bin/` wrapper):
+
+```bash
+pnpm start   # Development — watch mode with source maps
+pnpm build   # Production — minified, optimised, no source maps
+```
+
+Compiled assets are written to `app/dist/` and enqueued by the theme automatically.
+
+---
+
+## The `bari-cli` Plugin
+
+The `app/web/plugins/bari-cli/` plugin ships two WP-CLI command groups that are available via `./bin/wp`:
+
+### `wp migration` — Database Migration Engine
+
+```bash
+./bin/wp migration create "create orders table"
+./bin/wp migration migrate
+./bin/wp migration rollback
+./bin/wp migration status
+```
+
+Migration files live in `app/web/plugins/bari-cli/migrations/` by default and extend `AbstractMigration` with `up()` and `down()` methods. See [`docs/06-php-wordpress.md`](docs/06-php-wordpress.md) for full details.
+
+### `wp pattern` — Gutenberg Block Pattern Management
+
+```bash
+./bin/wp pattern create sections/hero
+./bin/wp pattern export 42 sections/hero --title="Hero – Full Width"
+./bin/wp pattern list
+```
+
+Patterns are stored in `app/web/themes/theme/app/Patterns/` and auto-registered by the theme. See [`docs/06-php-wordpress.md`](docs/06-php-wordpress.md) for full details.
 
 ---
 
@@ -68,10 +103,10 @@ Detailed documentation for each layer of the project is in the `docs/` directory
 | [`docs/03-environment.md`](docs/03-environment.md) | Complete `.env` variable reference |
 | [`docs/04-quick-start.md`](docs/04-quick-start.md) | Step-by-step setup guide |
 | [`docs/05-cli-scripts.md`](docs/05-cli-scripts.md) | All `bin/` scripts documented |
-| [`docs/06-php-wordpress.md`](docs/06-php-wordpress.md) | Composer setup, plugin dependencies, core isolation |
+| [`docs/06-php-wordpress.md`](docs/06-php-wordpress.md) | Composer setup, plugin dependencies, core isolation, bari-cli |
 | [`docs/07-theme.md`](docs/07-theme.md) | Theme architecture, hook classes, Twig templates |
 | [`docs/08-frontend-build.md`](docs/08-frontend-build.md) | Webpack, SCSS structure, design tokens |
-| [`docs/09-known-issues.md`](docs/09-known-issues.md) | All known bugs and incomplete features |
+| [`docs/09-known-issues.md`](docs/09-known-issues.md) | Resolved issues log |
 
 ---
 
@@ -82,38 +117,6 @@ cp sample.env .env          # Configure your environment
 # Edit .env: set SITE_NAME, HOST_NAME, APP_DOMAINS, admin credentials
 ./bin/install               # Provisions the full stack
 ```
-
----
-
-## Known Issues
-
-The following bugs and incomplete features exist in the current codebase. Full details and recommended fixes are in [`docs/09-known-issues.md`](docs/09-known-issues.md).
-
-### 🔴 Critical
-
-- **`functions.php` imports `App\Hooks\Acf` but `Acf.php` does not exist** — causes a PHP Fatal Error that prevents the theme from loading.
-- **`single.twig` includes `partials/comment.twig` and `partials/comment-form.twig`** — neither file exists; Timber throws a loader error on any post with comments.
-
-### 🟠 High
-
-- **`bari-cli` plugin is a 5-line stub** — the migration engine, WP-CLI `migration` commands, and `pattern` commands described in the docs are not implemented.
-- **`bin/to` script does not exist** — referenced in documentation but missing from disk. Use `docker exec -it {container} sh` directly.
-- **`bin/pnpm` uses the wrong working directory** (`app/wp-content` instead of the project root or `app/web/`) — the script always fails.
-- **`bin/pnpm` empty-check is broken** (`if [ PNPM = "" ]` should be `if [ -z "$PNPM" ]`) — the missing-pnpm error never triggers.
-
-### 🟡 Medium
-
-- **`bin/db` has hardcoded project-specific database aliases** (`ei`, `ti`, `ci`, `cti`) — unusable for new projects without modification.
-- **`!\Timber::class` check is always `false`** in `functions.php` and `Views.php` — Timber-missing admin notices never show.
-- **`single.twig` featured image has no `alt`, `loading`, or dimension attributes** — accessibility and performance issue.
-- **`bin/pnpm` references `.env.example`** in its error message — the correct file is `sample.env`.
-- **`Theme.php` sets `page_template` to `home.php`** — this template does not exist in the theme.
-
-### 🔵 Low
-
-- **`assets/styles/main.css`** exists but is not enqueued — any styles it contains are not loaded.
-- **`bin/version` pipe error handling** — curl failures may not be caught correctly on all shells.
-- **`WORDPRESS_VERSION=7.0`** in `sample.env` — verify this version exists before running `./bin/install`.
 
 ---
 

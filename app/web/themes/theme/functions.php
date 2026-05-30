@@ -23,7 +23,7 @@ define('APP_THEME_DIR', __DIR__);
 define('APP_THEME_URI', get_template_directory_uri());
 define('APP_THEME_DOMAIN', 'theme');
 
-if (!is_plugin_active('advanced-custom-fields-pro/acf.php') || !\Timber::class) {
+if (!is_plugin_active('advanced-custom-fields-pro/acf.php') || ! class_exists('Timber\Timber')) {
     add_action('admin_notices', function () {
         $acf_missing = !is_plugin_active('advanced-custom-fields-pro/acf.php');
         $timber_missing = !\Timber::class;

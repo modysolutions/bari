@@ -1,4 +1,5 @@
 #!/bin/bash
+set -o pipefail
 
 APP_DIR="./app"
 WP_CORE_DIR="$APP_DIR/wp"
