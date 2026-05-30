@@ -1,155 +1,122 @@
-# 🌿 WordPress Stack
+# 🛡️ Barí — WordPress Project Framework
 
-A high-performance, developer-friendly Docker stack designed for local WordPress development. It uses **PHP-FPM Alpine**, **Nginx**, **MariaDB**, and **Redis**, with automated SSL and project management via custom shell scripts.
+Barí is a self-contained, opinionated WordPress development framework built around Docker. It provides a fully controlled, reproducible local and production-ready WordPress stack designed for teams that want to build WordPress sites without depending on centralised SaaS infrastructure. It is intended as a white-label base for corporate and client WordPress projects.
 
-## 🚀 Quick Start
+## What it is
 
-### 1. Prerequisites
-* **Docker & Docker Compose**
-* **mkcert**: Install via `brew install mkcert` (Mac) or `sudo apt install mkcert` (Ubuntu). Run `mkcert -install` once.
-* **Local DNS**: Map your `HOST_NAME` to `127.0.0.1` in your `/etc/hosts` file.
-* **Satispress Key**: Create one on https://plugins.tamarindintelligence.com.
+Barí combines a **Docker-based infrastructure layer** with a **custom WordPress theme** and a **shell script CLI** that abstracts all container operations behind simple proxy commands. The result is a consistent, version-controlled environment where every developer on a team runs the same stack with one command.
 
-### 2. Permissions & Environment Setup
-Before running any scripts, you must grant execution permissions to the automation tools:
+The stack consists of:
 
-```bash
-# Grant execution permissions
-sudo chmod +x ./bin/*
+- **Nginx** — Reverse proxy with HTTPS, URL rewriting for the isolated WordPress core directory, and a transparent production uploads proxy for local development
+- **PHP-FPM** — A custom-built WordPress image with WP-CLI, Composer, Xdebug, Redis, and image processing extensions pre-installed
+- **MariaDB** — The relational database, fully configured via environment variables
+- **Redis** — Available for object caching
+- **Mailpit** — Captures all outgoing email and provides a web UI, preventing any email from reaching real inboxes during development
 
-# Initialize environment file
-cp sample.env .env
+All configuration — database credentials, WordPress constants, SMTP, memory limits, debug flags — is injected via a `.env` file. There is no hardcoded configuration in the codebase.
+
+
+## How it's structured
+
 ```
-Modify all the variables in .env to match your local setup, especially HOST_NAME and SATISPRESS_KEY
-
-### 3. Automated Installation
-Run the master installation script from the project root:
-
-```bash
-./bin/install
+bari/
+├── app/          → WordPress application (plugins, themes, content)
+├── bin/          → CLI proxy scripts (composer, wp, install, certs, db…)
+├── config/       → Infrastructure config (Dockerfile, Nginx, PHP, Webpack)
+├── src/          → Frontend source (JS + SCSS, compiled into the theme)
+├── compose.yml   → Docker service orchestration
+└── sample.env    → Environment variable template
 ```
 
-**What this command does automatically:**
-1.  **SSL Generation**: Runs `./bin/certs` to create locally trusted certificates.
-2.  **Directory creation**: Creates the `logs` directory for `wp` and `xdebug`.
-3.  **Container Launch**: Performs `docker compose up -d --build --force-recreate`.
-4.  **Updates WordPress**: Updates WordPress core files to the version specified in your `.env` file while preserving the `web`.
-5.  **Satispress Config**: Configures Composer to authenticate with the internal plugin repository using your `SATISPRESS_KEY`.
-6.  **Install dependencies**: `./bin/composer install`.
-7.  **Install WordPress**: If not already installed, it will run `wp multisite-install` with the credentials from your `.env` file.
-8.  **Create Sites**: If the `SITES` variable is defined, it will create those sites in the multisite network and activate the Theme in all of them.
-9.  **Activate Plugins**: If the `PLUGINS` variable is defined, it will install and activate those plugins in all sites of the multisite network.
----
+WordPress core lives in `app/wp/` — isolated from `app/web/` (the content directory) following a Bedrock-like pattern. Nginx rewrites all `wp-admin`, `wp-includes`, and `wp-*.php` paths to `/wp/`. This keeps core upgrades clean and keeps content directories outside of the core directory.
 
-## 🛠 Shell Script Toolbox (`./bin/`)
+PHP dependencies (plugins, themes) are managed via **Composer + WPackagist**. No manual plugin downloads. Premium plugins can be served from a private Satispress instance configured in `.env`.
 
-The `bin` directory contains proxy and automation scripts that handle complex tasks without requiring you to enter the containers.
+## The theme
 
-| Command | Description | Example Usage |
-| :--- | :--- | :--- |
-| **`./bin/install`** | Performs a full stack deployment, including Git cloning and DB pulling. | `./bin/install` |
-| **`./bin/config`** | Safely adds or updates a variable in your `.env` file. | `./bin/config SITE_NAME mysite` |
-| **`./bin/db`** | Imports local SQL or pulls a fresh database dump from remote servers. | `./bin/db pull ei` |
-| **`./bin/composer`** | Runs PHP Composer inside the app container. | `./bin/composer install` |
-| **`./bin/wp`** | Wrapper for WP-CLI using aliases defined in `wp-cli.yml`. | `./bin/wp @ei plugin list` |
-| **`./bin/certs`** | Generates SSL certificates for all local development domains. | `./bin/certs` |
-| **`./bin/version`**| Updates or downgrades WordPress core files while preserving `wp-content`. | `./bin/version 6.2.2` |
-| **`./bin/log`** | Standardized colored logging utility for scripts. | `./bin/log INFO "Message"` |
+The custom theme (`app/web/themes/theme/`) is an Astra child theme built on a **hook-based OOP architecture** under the `App\` namespace. It uses **Timber/Twig** for all HTML output: Twig owns the page shell, and Gutenberg block content renders inside `{{ post.content }}` via WordPress's `do_blocks()`.
+
+The block editor is configured via `theme.json`, which defines a controlled design system: colour palette, fluid typography scale, spacing presets, and element styles for headings, links, and buttons. Editors work within these constraints rather than having full freestyle control.
 
 ---
 
-## 📁 Directory Structure
-```text
-.
-├── app/                # WordPress Source Code (Managed by git/scripts)
-│   ├── wp              # Core files (Managed by git, updated via ./bin/version)
-│       ├── wp-admin    # Core admin files
-│       ├── wp-includes # Core includes
-│   ├── web             # Public directory (wp-content, uploads, custom plugins/themes)
-│       ├── plugins     # Plugins go here
-│       ├── themes      # Themes go here
-│   ├── index.php       # Entry point for Nginx
-│   ├── wp-config.php    # Custom configuration file
-├── bin/                # Master Automation Scripts (Must be +x)
-├── config/
-│   ├── php/            # Custom .ini files (uploads, mail, redis)
-│   ├── nginx/          # Nginx templates and config
-│   ├── ssl/            # Generated SSL certificates
-│   └── Dockerfile      # Custom PHP-FPM Image
-├── .env                # Project Configuration
-└── compose.yml         # Docker Orchestration
-```
+## The CLI
 
-## 🐧 Permissions Note (Linux Users)
-If you encounter permission issues while editing files in the `app/` directory, sync your local user with the Docker user:
+Every day-to-day operation has a shell script in `bin/` that proxies transparently into the correct Docker container:
+
 ```bash
-sudo chown -R $USER:$USER app/
-chmod -R 775 app/
+./bin/install         # Full environment provisioning from scratch
+./bin/start           # Start the stack (after initial install)
+./bin/wp plugin list  # Run WP-CLI commands
+./bin/composer install  # Run Composer
+./bin/certs           # Regenerate SSL certs
+./bin/version 6.7.2   # Install a specific WordPress core version
+./bin/db pull         # Pull a database from a remote server
 ```
-The stack is pre-configured to synchronize UID 1000 to ensure seamless file sharing between your host and the containers.
 
-### 🛠️ Available Commands
+---
 
-Use the project's binary wrapper to execute commands. This ensures the correct container and user (`www-data`) are used.
+## Full Documentation
 
-### 1. Create a New Migration
-Generates a boilerplate migration file with a timestamped version and snake_case name.
+Detailed documentation for each layer of the project is in the `docs/` directory:
+
+| Document | Contents |
+|---|---|
+| [`docs/01-architecture.md`](docs/01-architecture.md) | Full directory map and architectural decisions |
+| [`docs/02-infrastructure.md`](docs/02-infrastructure.md) | Docker services, Dockerfile, Nginx, PHP config |
+| [`docs/03-environment.md`](docs/03-environment.md) | Complete `.env` variable reference |
+| [`docs/04-quick-start.md`](docs/04-quick-start.md) | Step-by-step setup guide |
+| [`docs/05-cli-scripts.md`](docs/05-cli-scripts.md) | All `bin/` scripts documented |
+| [`docs/06-php-wordpress.md`](docs/06-php-wordpress.md) | Composer setup, plugin dependencies, core isolation |
+| [`docs/07-theme.md`](docs/07-theme.md) | Theme architecture, hook classes, Twig templates |
+| [`docs/08-frontend-build.md`](docs/08-frontend-build.md) | Webpack, SCSS structure, design tokens |
+| [`docs/09-known-issues.md`](docs/09-known-issues.md) | All known bugs and incomplete features |
+
+---
+
+## Quick Start
+
 ```bash
-./bin/wp tamarind migrate create "create search index table"
-```
-* **Output:** Creates `v20260330_001_create_search_index_table.php`
-* **Template:** Includes `up()` and `down()` methods with `$wpdb` access.
-
-### 2. Run Pending Migrations
-Applies all migrations that haven't been recorded in the migration log table.
-```bash
-./bin/wp tamarind migrate up
+cp sample.env .env          # Configure your environment
+# Edit .env: set SITE_NAME, HOST_NAME, APP_DOMAINS, admin credentials
+./bin/install               # Provisions the full stack
 ```
 
-### 3. Rollback Last Migration
-Reverts the very last migration applied to the database.
-```bash
-./bin/wp tamarind migrate down
-```
+---
 
-### 📝 Base Schema Example
+## Known Issues
 
-Let's add a new table with an id and a post_id field in the up command:
+The following bugs and incomplete features exist in the current codebase. Full details and recommended fixes are in [`docs/09-known-issues.md`](docs/09-known-issues.md).
 
-```php
-public function up() {
-    global $wpdb;
-    $table_name = $wpdb->prefix . 'tamarind_search_index';
-    $charset_collate = $wpdb->get_charset_collate();
+### 🔴 Critical
 
-    $sql = "CREATE TABLE $table_name (
-        id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-        post_id bigint(20) UNSIGNED NOT NULL,
-        PRIMARY KEY (id), 
-    ) $charset_collate;";
+- **`functions.php` imports `App\Hooks\Acf` but `Acf.php` does not exist** — causes a PHP Fatal Error that prevents the theme from loading.
+- **`single.twig` includes `partials/comment.twig` and `partials/comment-form.twig`** — neither file exists; Timber throws a loader error on any post with comments.
 
-    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-    dbDelta($sql); // Standard WP way to update schema
-}
-```
+### 🟠 High
 
-Now we can remove that table in the down command like this:
-```php
-public function down() {
-    global $wpdb;
-    $table = $wpdb->prefix . $this->table_name;
-    $wpdb->query("DROP TABLE IF EXISTS $table");
-}
-```
+- **`bari-cli` plugin is a 5-line stub** — the migration engine, WP-CLI `migration` commands, and `pattern` commands described in the docs are not implemented.
+- **`bin/to` script does not exist** — referenced in documentation but missing from disk. Use `docker exec -it {container} sh` directly.
+- **`bin/pnpm` uses the wrong working directory** (`app/wp-content` instead of the project root or `app/web/`) — the script always fails.
+- **`bin/pnpm` empty-check is broken** (`if [ PNPM = "" ]` should be `if [ -z "$PNPM" ]`) — the missing-pnpm error never triggers.
 
-### ⚠️ Best Practices
+### 🟡 Medium
 
-1.  **Wrapper Usage:** Always use `./bin/wp` instead of `docker exec` to maintain consistent file ownership.
-2.  **Immutability:** Never edit a migration file after it has been executed in production. Create a new one for any further changes.
-3. **Format:** Always add an up and a down command to a migration so database can be reverted to the original state before the migration was done.
-4.  **Clean up:** If your migration adds significant data, remember to flush the **Redis** cache:
-    ```bash
-    ./bin/wp cache flush
-    ```
+- **`bin/db` has hardcoded project-specific database aliases** (`ei`, `ti`, `ci`, `cti`) — unusable for new projects without modification.
+- **`!\Timber::class` check is always `false`** in `functions.php` and `Views.php` — Timber-missing admin notices never show.
+- **`single.twig` featured image has no `alt`, `loading`, or dimension attributes** — accessibility and performance issue.
+- **`bin/pnpm` references `.env.example`** in its error message — the correct file is `sample.env`.
+- **`Theme.php` sets `page_template` to `home.php`** — this template does not exist in the theme.
 
-*Documentation for Tamarind Media, S.L. Full Stack Development Team.*
+### 🔵 Low
+
+- **`assets/styles/main.css`** exists but is not enqueued — any styles it contains are not loaded.
+- **`bin/version` pipe error handling** — curl failures may not be caught correctly on all shells.
+- **`WORDPRESS_VERSION=7.0`** in `sample.env` — verify this version exists before running `./bin/install`.
+
+---
+
+## License
+
+GPL-2.0-or-later. Free to use, modify, redistribute, and package as a white-label foundation for client projects.

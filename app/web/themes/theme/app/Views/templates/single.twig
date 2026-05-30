@@ -14,24 +14,6 @@
                 </p>
                 <div class="article-body">{{ post.content }}</div>
             </section>
-            <section class="comment-box">
-                <div class="comments">
-                    {% if post.comments %}
-                        <h3>comments</h3>
-                        {% for cmt in post.comments %}
-                            {% include 'partials/comment.twig' with {
-                                comment: cmt
-                            } %}
-                        {% endfor %}
-                    {% endif %}
-                </div>
-
-                {% if post.comment_status == 'closed' %}
-                    <p>comments for this post are closed</p>
-                {% else %}
-                    {% include 'partials/comment-form.twig' %}
-                {% endif %}
-            </section>
         </article>
     </div>
 {% endblock %}

@@ -9,7 +9,6 @@
 
 namespace App;
 
-use App\Hooks\Acf;
 use App\Hooks\Gutenberg;
 use App\Hooks\App;
 use App\Hooks\Security;

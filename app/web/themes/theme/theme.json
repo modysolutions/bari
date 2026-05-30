@@ -95,7 +95,7 @@
       "dropCap": false,
       "fontFamilies": [
         {
-          "fontFamily": "Sansation",
+          "fontFamily": "Verdana, sans",
           "name": "Sans",
           "slug": "sans"
         }
@@ -140,7 +140,7 @@
     "color": {
       "background": "",
       "gradient": "",
-      "text": "#f5f5f5"
+      "text": "#3333333"
     },
     "filter": {
       "duotone": ""
@@ -161,7 +161,7 @@
       }
     },
     "typography": {
-      "fontFamily": "Sansation, sans",
+      "fontFamily": "Verdana, sans",
       "fontSize": "18px",
       "fontStyle": "",
       "fontWeight": "",

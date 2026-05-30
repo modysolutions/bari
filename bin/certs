@@ -15,5 +15,5 @@ fi
 source "${ENV_FILE}";
 
 ./bin/log "INFO" "Running mkcert to generate certificates for local domains..."
-mkcert -cert-file ./config/ssl/local-cert.pem -key-file ./config/ssl/local-key.pem $APP_DOMAINS 127.0.0.1
+mkcert -cert-file ./config/ssl/local-cert.pem -key-file ./config/ssl/local-key.pem "bari.local" "*.bari.local" 127.0.0.1
 sudo mkcert -install

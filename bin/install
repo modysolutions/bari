@@ -9,77 +9,15 @@ if [ ! -f "${ENV_FILE}" ]; then
 fi
 source "${ENV_FILE}";
 THEME="theme"
-PLUGINS=(
-  "advanced-custom-fields-pro"
-  "astra-addon"
-  "gravityforms"
-  "omitsis-location-detector"
-  "omitsis-tableau"
-  "query-monitor"
-  "redirection"
-  "tamarind-analytics"
-  "tamarind-base"
-  "tamarind-company-news"
-  "tamarind-events"
-  "tamarind-favourites"
-  "tamarind-forms"
-  "tamarind-hidden-toc"
-  "tamarind-mapsvg"
-  "tamarind-notifications"
-  "tamarind-original-creation-date"
-  "tamarind-pdfs"
-  "tamarind-reports"
-  "tamarind-rest-api"
-  "tamarind-search"
-  "tamarind-subscriptions"
-  "tamarind-table-of-contents"
-  "tamarind-templates-custom-lists"
-  "tamarind-user-area"
-  "tamarind-user-home"
-  "tamarind-wp-cli"
-)
-
-SITES=(
-  "auth.tamarindintelligence.local"
-  "app.ecigintelligence.local"
-  "app.tobaccointelligence.local"
-  "app.cannintelligence.local"
-)
 
 ./bin/certs
 mkdir -p "${ROOT_DIR}/app/logs" && \
 touch "${ROOT_DIR}/app/logs/xdebug.log" && \
 touch "${ROOT_DIR}/app/logs/wp.log" && \
 chmod 666 "${ROOT_DIR}/app/logs/xdebug.log" "${ROOT_DIR}/app/logs/wp.log" && \
-./bin/config WORDPRESS_ALLOW_MULTISITE 0 && \
-./bin/config WORDPRESS_MULTISITE 0 && \
-./bin/config WORDPRESS_SUBDOMAIN_INSTALL 0 && \
 docker compose up -d --build --force-recreate --remove-orphans && \
 ./bin/version "${WORDPRESS_VERSION}" --no-backup && \
 ./bin/composer config http-basic.plugins.tamarindintelligence.com "${SATISPRESS_KEY}" "satispress" && \
 ./bin/composer install && \
-./bin/wp core multisite-install --url="${HOST_NAME}" --title="${SITE_TITLE}" --admin_user="${SITE_ADMIN}"  --admin_email="${SITE_ADMIN}" --admin_password="${SITE_ADMIN_PASSWD}" --skip-email --skip-config --subdomains && \
-./bin/config WORDPRESS_ALLOW_MULTISITE 1 && \
-./bin/config WORDPRESS_MULTISITE 1 && \
-./bin/config WORDPRESS_SUBDOMAIN_INSTALL 1 && \
-docker compose up wordpress -d --build --force-recreate --remove-orphans && \
-
-for SITE in "${SITES[@]}"; do
-  SLUG=$(echo "${SITE}" | cut -d'.' -f2)
-
-  ./bin/log "INFO" "Creating site for ${SLUG}..."
-  ./bin/wp site create --slug="${SLUG}" --title="Tamarind ${SLUG}" --email="${SITE_ADMIN}" --url="${HOST_NAME}"
-  TEMP_DOMAIN="${SLUG}.${HOST_NAME}"
-
-  ./bin/log "INFO" "Mapping domain ${TEMP_DOMAIN} to ${SITE}..."
-  ./bin/wp db query "UPDATE wp_blogs SET domain = '${SITE}' WHERE domain = '${TEMP_DOMAIN}';" --url="${HOST_NAME}"
-  ./bin/wp option update home "https://${SITE}" --url="${SITE}"
-  ./bin/wp option update siteurl "https://${SITE}/wp" --url="${SITE}"
-  ./bin/wp theme activate "${THEME}" --url="https://${SITE}"
-done
-
-for PLUGIN in "${PLUGINS[@]}"; do
-  ./bin/wp plugin activate "${PLUGIN}" --url="${HOST_NAME}" --network
-done
-
+./bin/wp core install --url="${HOST_NAME}" --title="${SITE_TITLE}" --admin_user="${SITE_ADMIN}"  --admin_email="${SITE_ADMIN}" --admin_password="${SITE_ADMIN_PASSWD}" --skip-email && \
 ./bin/log "SUCCESS" "Installation completed successfully"

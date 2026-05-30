@@ -27,10 +27,7 @@ services:
     networks:
       default:
         aliases:
-          - auth.tamarindintelligence.local
-          - app.ecigintelligence.local
-          - app.tobaccointelligence.local
-          - app.cannintelligence.local
+          - ${MAIL_HOST:-mailpit}
 
   wordpress:
     container_name: ${CONTAINER_PREFIX:-wp_}app
@@ -83,6 +80,7 @@ services:
         define( 'COMPRESS_SCRIPTS', '${WORDPRESS_COMPRESS_SCRIPTS:-1}' );
         define( 'ENFORCE_GZIP', '${WORDPRESS_ENFORCE_GZIP:-true}' );
         define( 'DISABLE_WP_CRON', '${WORDPRESS_DISABLE_WP_CRON:-0}' );
+        define( 'WP_DEFAULT_THEME', '${WORDPRESS_DEFAULT_THEME:-theme}' );
         if ( defined( 'WP_CLI' ) && WP_CLI ) {
             @ini_set( 'display_errors', 0 );
             error_reporting( E_ALL & ~E_NOTICE & ~E_DEPRECATED );

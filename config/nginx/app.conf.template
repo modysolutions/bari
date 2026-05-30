@@ -19,28 +19,6 @@ server {
     root /var/www/html;
     index index.php index.html index.htm;
 
-    resolver 8.8.8.8 1.1.1.1 valid=300s;
-    resolver_timeout 5s;
-
-    location ^~ /web/uploads/ {
-        try_files $uri @production_proxy;
-    }
-
-    location @production_proxy {
-        set $prod_url https://${PROXY_NAME};
-        proxy_pass $prod_url$request_uri;
-        proxy_set_header Host ${PROXY_NAME};
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_ssl_server_name on;
-        proxy_ssl_name ${PROXY_NAME};
-        proxy_ssl_protocols TLSv1.2 TLSv1.3;
-        proxy_ssl_session_reuse on;
-        proxy_intercept_errors on;
-        error_page 404 /index.php;
-        add_header X-Proxy-Status "Miss - Fetched from Production";
-    }
-
     rewrite ^/(wp-admin|wp-includes)/(.*)$ /wp/$1/$2 last;
     rewrite ^/(wp-[^/]+\.php|xmlrpc\.php)$ /wp/$1 last;
     rewrite ^/wp-admin$ $scheme://$host$uri/ permanent;

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "wp-scripts start --config-file=config/webpack/webpack.config.js --output-path=app/dist",
-    "build": "wp-scripts build"
+    "build": "wp-scripts build --config-file=config/webpack/webpack.config.js --output-path=app/dist"
   },
   "keywords": [],
   "author": "",
