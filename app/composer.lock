@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "90e4c5697b73c5636bb890d106e5bcfe",
+    "content-hash": "1f5d6c4e529339bf863fd230c04e2254",
     "packages": [
         {
             "name": "composer/installers",
@@ -731,6 +731,24 @@
             },
             "type": "wordpress-theme",
             "homepage": "https://wordpress.org/themes/astra/"
+        },
+        {
+            "name": "wpackagist-theme/twentytwentyfive",
+            "version": "1.5",
+            "source": {
+                "type": "svn",
+                "url": "https://themes.svn.wordpress.org/twentytwentyfive/",
+                "reference": "1.5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/theme/twentytwentyfive.1.5.zip"
+            },
+            "require": {
+                "composer/installers": "^1.0 || ^2.0"
+            },
+            "type": "wordpress-theme",
+            "homepage": "https://wordpress.org/themes/twentytwentyfive/"
         }
     ],
     "packages-dev": [
