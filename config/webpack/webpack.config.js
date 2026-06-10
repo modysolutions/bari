@@ -1,10 +1,23 @@
-const path = require( 'path' );
-const defaults = require( '@wordpress/scripts/config/webpack.config.js' );
+const path = require('path');
+const glob = require('glob');
+const defaults = require('@wordpress/scripts/config/webpack.config.js');
+
+// Function to get entries for plugins
+const getPluginEntries = () => {
+    const entries = {};
+    const pluginDirs = glob.sync('./src/plugins/*/');
+    pluginDirs.forEach(dir => {
+        const pluginName = path.basename(dir);
+        entries[pluginName] = path.resolve(process.cwd(), dir, 'app.js');
+    });
+    return entries;
+};
 
 module.exports = {
     ...defaults,
     entry: {
-        theme: path.resolve( process.cwd(), 'src', 'app.js' ),
+        theme: path.resolve(process.cwd(), 'src', 'theme', 'app.js'),
+        ...getPluginEntries(),
     },
     module: {
         ...defaults.module,
@@ -20,7 +33,7 @@ module.exports = {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: [ '@babel/preset-react' ],
+                        presets: ['@babel/preset-react'],
                     },
                 },
             },

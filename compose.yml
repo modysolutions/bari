@@ -49,7 +49,7 @@ services:
       - ./config/php/zzz-mail.ini:/usr/local/etc/php/conf.d/zzz-mail.ini:ro
       - ./config/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini:ro
     environment:
-      WORDPRESS_DB_HOST: wp_db
+      WORDPRESS_DB_HOST: database
       WORDPRESS_DB_NAME: $DB_NAME
       WORDPRESS_DB_USER: $DB_USER
       WORDPRESS_DB_PASSWORD: $DB_PASSWORD
@@ -90,7 +90,7 @@ services:
       SSH_HOST_PRODUCTION: ${SSH_HOST_PRODUCTION:-test.com}
       SSH_HOST_STAGE: ${SSH_HOST_STAGE:-stage.test.com}
     depends_on:
-      wp_db:
+      database:
         condition: service_healthy
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -100,9 +100,9 @@ services:
     networks:
       - default
 
-  wp_db:
+  database:
     container_name: ${CONTAINER_PREFIX:-wp_}db
-    image: mariadb:11.4.7
+    image: mariadb:${MARIADB_VERSION:-11.4.7}
     restart: unless-stopped
     ports:
       - 3306:3306

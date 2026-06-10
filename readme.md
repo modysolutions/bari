@@ -88,7 +88,7 @@ Migration files live in `app/web/plugins/bari-cli/migrations/` by default and ex
 ./bin/wp pattern list
 ```
 
-Patterns are stored in `app/web/themes/theme/app/Patterns/` and auto-registered by the theme. See [`docs/06-php-wordpress.md`](docs/06-php-wordpress.md) for full details.
+Patterns are stored in `app/web/themes/theme/app/Patterns/` and auto-registered by the theme. See [`documentation/06-php-wordpress.md`](documentation/06-php-wordpress.md) for full details.
 
 ---
 
@@ -96,17 +96,17 @@ Patterns are stored in `app/web/themes/theme/app/Patterns/` and auto-registered 
 
 Detailed documentation for each layer of the project is in the `docs/` directory:
 
-| Document | Contents |
-|---|---|
-| [`docs/01-architecture.md`](docs/01-architecture.md) | Full directory map and architectural decisions |
-| [`docs/02-infrastructure.md`](docs/02-infrastructure.md) | Docker services, Dockerfile, Nginx, PHP config |
-| [`docs/03-environment.md`](docs/03-environment.md) | Complete `.env` variable reference |
-| [`docs/04-quick-start.md`](docs/04-quick-start.md) | Step-by-step setup guide |
-| [`docs/05-cli-scripts.md`](docs/05-cli-scripts.md) | All `bin/` scripts documented |
-| [`docs/06-php-wordpress.md`](docs/06-php-wordpress.md) | Composer setup, plugin dependencies, core isolation, bari-cli |
-| [`docs/07-theme.md`](docs/07-theme.md) | Theme architecture, hook classes, Twig templates |
-| [`docs/08-frontend-build.md`](docs/08-frontend-build.md) | Webpack, SCSS structure, design tokens |
-| [`docs/09-known-issues.md`](docs/09-known-issues.md) | Resolved issues log |
+| Document                                                                   | Contents |
+|----------------------------------------------------------------------------|---|
+| [`documentation/01-architecture.md`](documentation/01-architecture.md)     | Full directory map and architectural decisions |
+| [`documentation/02-infrastructure.md`](documentation/02-infrastructure.md) | Docker services, Dockerfile, Nginx, PHP config |
+| [`documentation/03-environment.md`](documentation/03-environment.md)       | Complete `.env` variable reference |
+| [`documentation/04-quick-start.md`](documentation/04-quick-start.md)       | Step-by-step setup guide |
+| [`documentation/05-cli-scripts.md`](documentation/05-cli-scripts.md)       | All `bin/` scripts documented |
+| [`documentation/06-php-wordpress.md`](documentation/06-php-wordpress.md)   | Composer setup, plugin dependencies, core isolation, bari-cli |
+| [`documentation/07-theme.md`](documentation/07-theme.md)                   | Theme architecture, hook classes, Twig templates |
+| [`documentation/08-frontend-build.md`](documentation/08-frontend-build.md) | Webpack, SCSS structure, design tokens |
+| [`documentation/09-known-issues.md`](documentation/09-known-issues.md)     | Resolved issues log |
 
 ---
 
