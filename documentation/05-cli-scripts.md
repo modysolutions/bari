@@ -4,29 +4,28 @@ All scripts must be run from the **project root** directory. They read `.env` au
 
 ---
 
-## `./bin/install [mode]`
+## `./bin/install`
 
-**Master provisioning script.** Runs the full installation from scratch.
+**Master provisioning script.** Runs the full installation from scratch for a standard single-site WordPress installation.
 
 ```bash
-./bin/install          # Single site (default)
-./bin/install multisite  # WordPress Multisite
+./bin/install
 ```
 
 **Sequence:**
 1. Validates `.env` exists
 2. Generates SSL certificates (`./bin/certs`)
-3. Creates `app/logs/`, `logs/nginx/`, `logs/wordpress/`
-4. Writes multisite configuration to `.env` via `./bin/config`
-5. Builds Docker image and starts all services (`docker compose up -d --build --force-recreate --remove-orphans`)
-6. Downloads WordPress core (`./bin/version $WORDPRESS_VERSION --no-backup`)
-7. Polls the PHP container until it's ready (max 30 × 3s = 90s)
-8. Configures Satispress if `SATISPRESS_URL` is not the placeholder
-9. `./bin/composer install`
-10. Runs `wp core install` or `wp core multisite-install` (skipped if already installed)
-11. Prints summary with site URL, admin URL, credentials, and mail UI
+3. Creates log directories (`app/logs/`)
+4. Builds the Docker image and starts all services
+5. Downloads WordPress core (`./bin/version`)
+6. Waits for the PHP container to become ready
+7. Configures Satispress authentication (if `SATISPRESS_KEY` is set)
+8. Runs `./bin/composer install`
+9. Runs `wp core install`
+10. Runs smoke tests (`./bin/test`)
+11. Prints a success message
 
-**Uses variables:** `WORDPRESS_VERSION`, `HOST_NAME`, `SITE_TITLE`, `SITE_ADMIN_USER`, `SITE_ADMIN_EMAIL`, `SITE_ADMIN_PASSWD`, `CONTAINER_PREFIX`, `SATISPRESS_URL`, `SATISPRESS_KEY`, `MAIL_HOST`, `SITE_NAME`
+**Uses variables:** `WORDPRESS_VERSION`, `HOST_NAME`, `SITE_TITLE`, `SITE_ADMIN_USER`, `SITE_ADMIN_EMAIL`, `SITE_ADMIN_PASSWD`, `CONTAINER_PREFIX`, `SATISPRESS_URL`, `SATISPRESS_KEY`
 
 ---
 
@@ -135,6 +134,30 @@ The script reads `wp-cli.yml` to find the container name for the current `$SITE_
 
 ---
 
+## `./bin/test`
+
+**Run smoke tests** against a running stack to verify its health.
+
+```bash
+./bin/test
+```
+
+The script executes a series of checks to ensure all major infrastructure components are operational and correctly interconnected. It sources `.env` to get the correct container names and hostnames.
+
+**Sequence of Tests:**
+
+1.  **Container Orchestration**: Verifies that all core Docker containers (`app`, `db`, `server`, `redis`, `mail`) are up and running. It dynamically constructs the expected container names using the `CONTAINER_PREFIX`.
+2.  **Database Connectivity**: Executes `wp db query "SELECT 1;"` to confirm that WordPress can successfully connect to and query the MariaDB database.
+3.  **Object Cache**: Runs `wp cache get ...` to ensure the Redis object cache is responsive and integrated with WordPress.
+4.  **Frontend HTTP Resolution**: Makes an HTTPS request to the site's hostname from within the `app` container to check that the Nginx web server is correctly routing requests and serving content (expects a `200`, `301`, or `302` status code).
+5.  **Mail Catcher**: Checks that the Mailpit API is reachable from the `app` container, confirming that the transactional mail gateway is visible.
+
+The script will exit with a status code of `0` if all tests pass, and `1` if any test fails.
+
+**Uses variables:** `CONTAINER_PREFIX`, `HOST_NAME`
+
+---
+
 ## Frontend Build
 
 Frontend assets are **not** compiled through a `bin/` script. Run the following commands directly from the **project root** (where `package.json` lives):
@@ -148,23 +171,3 @@ pnpm build
 ```
 
 Both commands invoke `@wordpress/scripts` with the custom webpack config at `config/webpack/webpack.config.js` and write compiled assets to `app/dist/`. See [`docs/08-frontend-build.md`](./08-frontend-build.md) for full details.
-
----
-
-## `./bin/log LEVEL MESSAGE`
-
-**Coloured log output helper.** Used internally by all other scripts.
-
-```bash
-./bin/log "INFO"    "Starting..."
-./bin/log "SUCCESS" "Done."
-./bin/log "WARNING" "Check this."
-./bin/log "ERROR"   "Something failed."
-```
-
-| Level | Colour |
-|---|---|
-| `INFO` | Blue |
-| `SUCCESS` | Green |
-| `WARNING` | Yellow |
-| `ERROR` | Red |

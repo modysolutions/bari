@@ -8,7 +8,6 @@ if [ ! -f "${ENV_FILE}" ]; then
   exit 1;
 fi
 source "${ENV_FILE}";
-THEME="theme"
 
 ./bin/certs
 mkdir -p "${ROOT_DIR}/app/logs" && \
@@ -19,6 +18,6 @@ docker compose up -d --build --force-recreate --remove-orphans && \
 ./bin/version "${WORDPRESS_VERSION}" --no-backup && \
 ./bin/composer config http-basic.plugins.tamarindintelligence.com "${SATISPRESS_KEY}" "satispress" && \
 ./bin/composer install && \
-./bin/wp core install --url="${HOST_NAME}" --title="${SITE_TITLE}" --admin_user="${SITE_ADMIN}"  --admin_email="${SITE_ADMIN}" --admin_password="${SITE_ADMIN_PASSWD}" --skip-email && \
+./bin/wp core install --url="${HOST_NAME}" --title="${SITE_TITLE}" --admin_user="${SITE_ADMIN_USER}"  --admin_email="${SITE_ADMIN_EMAIL}" --admin_password="${SITE_ADMIN_PASSWD}" --skip-email && \
 ./bin/test && \
 ./bin/log "SUCCESS" "Installation completed successfully"

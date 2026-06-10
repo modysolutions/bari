@@ -48,25 +48,19 @@ SITE_TITLE="My Project"
 ./bin/install
 ```
 
-For a **WordPress Multisite** installation:
-
-```bash
-./bin/install multisite
-```
-
 The install script performs the following steps automatically:
 
 1. Checks that `.env` exists and sources it
 2. Generates local SSL certificates via `mkcert` (runs `./bin/certs`)
-3. Creates log directories (`app/logs/`, `logs/nginx/`, `logs/wordpress/`)
-4. Writes multisite/single-site flags to `.env` based on the install mode
-5. Builds the Docker image and starts all services
-6. Downloads WordPress core into `app/wp/` (via `./bin/version`)
-7. Waits for the PHP container to become ready (polls up to 90 seconds)
-8. Configures Satispress authentication (skipped if using placeholder URL)
-9. Runs `composer install` inside the PHP container
-10. Installs WordPress via WP-CLI (skipped if already installed)
-11. Prints the site URL, admin URL, credentials, and mail UI URL
+3. Creates log directories (`app/logs/`)
+4. Builds the Docker image and starts all services
+5. Downloads WordPress core into `app/wp/` (via `./bin/version`)
+6. Waits for the PHP container to become ready
+7. Configures Satispress authentication (if `SATISPRESS_KEY` is set)
+8. Runs `composer install` inside the PHP container
+9. Installs WordPress via WP-CLI (for a standard single-site)
+10. Runs smoke tests via `./bin/test`
+11. Prints a success message upon completion
 
 ---
 
