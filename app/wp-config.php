@@ -147,6 +147,12 @@ define( 'WP_SITEURL', $protocol . $http_host . '/wp' );
 define( 'WP_CONTENT_DIR', __DIR__ . '/web' );
 define( 'WP_CONTENT_URL', $protocol . $http_host . '/web' );
 
+define( 'DOMAIN_CURRENT_SITE', $main_network_domain );
+define( 'COOKIE_DOMAIN', $http_host );
+define( 'ADMIN_COOKIE_PATH', '/' );
+define( 'COOKIEPATH', '/' );
+define( 'SITECOOKIEPATH', '/' );
+
 /* That's all, stop editing! Happy publishing. */
 
 /** Absolute path to the WordPress directory. */

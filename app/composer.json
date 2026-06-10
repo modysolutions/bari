@@ -27,7 +27,6 @@
         "wpackagist-plugin/redirection": "5.6.1",
         "wpackagist-plugin/smart-phone-field-for-gravity-forms": "2.2.0",
         "wpackagist-plugin/ultimate-addons-for-gutenberg": "2.19.26",
-        "wpackagist-theme/astra": "4.13.3",
         "timber/timber": "^2.0",
         "wpackagist-theme/twentytwentyfive": "^1.5"
     },
