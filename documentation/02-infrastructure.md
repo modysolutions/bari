@@ -81,7 +81,7 @@ The Docker Compose environment block passes a multi-line PHP string as `WORDPRES
 
 | Property | Value |
 |---|---|
-| Image | `mariadb:11.4.7` |
+| Image | `mariadb:${MARIADB_VERSION}` (see `.env`) |
 | Port | `3306:3306` |
 | Data | Named volume `{CONTAINER_PREFIX}data` |
 

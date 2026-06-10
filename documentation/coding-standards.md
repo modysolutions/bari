@@ -2,7 +2,7 @@
 
 _Last reviewed: 2026-06-07_
 
-These standards are intended for all custom code in `app/web/themes/theme`, `app/web/plugins/omitsis-*`, and `app/web/plugins/bari-*`.
+These standards are intended for all custom code in `app/web/themes/theme` and `app/web/plugins/bari-*`.
 
 ## Core principles
 

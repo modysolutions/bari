@@ -33,3 +33,5 @@ backups
 config/ssl/*
 
 node_modules
+
+wp-cli.yml

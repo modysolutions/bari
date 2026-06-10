@@ -18,6 +18,8 @@ Severity guide:
 - **Inconsistent `bari-cli` description:** The `bari-cli` plugin was described as "not yet implemented" in `01-architecture.md`, but is fully implemented. The documentation has been unified.
 - **Inconsistent service names:** The service names in `03-environment.md` were inconsistent with `compose.yml`. This has been corrected.
 - **Confusing frontend entry example:** The `plugin-development.md` guide provided a confusing example for adding a new frontend entry. This has been clarified with two distinct options for developers.
+- **Hardcoded MariaDB version:** The MariaDB version was hardcoded in `02-infrastructure.md`. It is now configurable via the `MARIADB_VERSION` variable in `.env`.
+- **`omitsis-*` plugin prefix:** The `coding-standards.md` file referenced a legacy `omitsis-*` plugin prefix. This has been removed.
 
 ## Critical
 
@@ -30,8 +32,7 @@ _Nothing at the moment._
 
 ## Medium
 
-- **Hardcoded MariaDB version:** The MariaDB version `11.4.7` is hardcoded in `02-infrastructure.md`. This should be updated to reflect the version specified in `compose.yml` or generalized.
-- **`omitsis-*` plugin prefix:** The `coding-standards.md` file still references a legacy `omitsis-*` plugin prefix. This should be removed or replaced with the current `bari-*` prefix.
+_Nothing at the moment._
 
 ## Low / cleanup
 

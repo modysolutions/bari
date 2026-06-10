@@ -20,4 +20,5 @@ docker compose up -d --build --force-recreate --remove-orphans && \
 ./bin/composer config http-basic.plugins.tamarindintelligence.com "${SATISPRESS_KEY}" "satispress" && \
 ./bin/composer install && \
 ./bin/wp core install --url="${HOST_NAME}" --title="${SITE_TITLE}" --admin_user="${SITE_ADMIN}"  --admin_email="${SITE_ADMIN}" --admin_password="${SITE_ADMIN_PASSWD}" --skip-email && \
+./bin/test && \
 ./bin/log "SUCCESS" "Installation completed successfully"

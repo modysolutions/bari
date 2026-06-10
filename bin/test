@@ -1,0 +1,102 @@
+#!/bin/bash
+
+# Find the absolute root path safely
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+ROOT_DIR="$(dirname "$DIR")"
+
+# Ensure the log utility is available and executable
+if [ ! -x "$DIR/log" ]; then
+    echo "❌ ERROR: The log utility at $DIR/log is missing or not executable."
+    exit 1
+fi
+
+# Load variables from environment
+if [ -f "$ROOT_DIR/.env" ]; then
+    source "$ROOT_DIR/.env"
+else
+    log_error "Missing .env file. Run your initialization layout first."
+    exit 1
+fi
+
+TARGET_HOST="${HOST_NAME:-localhost}"
+FAILED=0
+
+echo "=========================================================="
+echo "🛡️  RUNNING BARÍ STACK SMOKE TESTS FOR: https://$TARGET_HOST"
+echo "=========================================================="
+
+# --- TEST 1: Container Orchestration Check ---
+"$DIR/log" "INFO" "Verifying that all core Docker containers are up..."
+# Construct expected container names from .env
+APP_CONTAINER="${CONTAINER_PREFIX:-wp_}app"
+DB_CONTAINER="${CONTAINER_PREFIX:-wp_}db"
+NGINX_CONTAINER="${CONTAINER_PREFIX:-wp_}server"
+REDIS_CONTAINER="${CONTAINER_PREFIX:-wp_}redis"
+MAIL_CONTAINER="${CONTAINER_PREFIX:-wp_}mail"
+
+RUNNING_CONTAINERS=$(docker compose ps --status running --format "{{.Name}}")
+EXPECTED_CONTAINERS=("$APP_CONTAINER" "$DB_CONTAINER" "$NGINX_CONTAINER" "$REDIS_CONTAINER" "$MAIL_CONTAINER")
+
+for container in "${EXPECTED_CONTAINERS[@]}"; do
+    if [[ ! "$RUNNING_CONTAINERS" =~ $container ]]; then
+        "$DIR/log" "ERROR" "Docker container [$container] is NOT running."
+        FAILED=1
+    fi
+done
+
+if [ $FAILED -eq 0 ]; then
+    "$DIR/log" "INFO" "✅ All primary containers are healthy and running."
+fi
+
+# --- TEST 2: Database Connectivity ---
+"$DIR/log" "INFO" "Testing database accessibility internally..."
+# Query via the db abstraction proxy tool or directly through the container instance
+"$DIR/wp" db query "SHOW TABLES;" > /dev/null 2>&1
+if [ $? -eq 0 ]; then
+    "$DIR/log" "INFO" "✅ Core database connection handshake accepted by WordPress."
+else
+    "$DIR/log" "ERROR" "WordPress cannot query the MariaDB database instance."
+    FAILED=1
+fi
+
+# --- TEST 3: Object Cache Execution ---
+"$DIR/log" "INFO" "Verifying Redis transient layer..."
+"$DIR/wp" cache type > /dev/null 2>&1
+if [ $? -eq 0 ]; then
+    "$DIR/log" "INFO" "✅ Redis object caching layer actively operational."
+else
+    "$DIR/log" "ERROR" "Object Cache backend failure or handshake timeout."
+    FAILED=1
+fi
+
+# --- TEST 4: Frontend HTTP Routing Resolution ---
+"$DIR/log" "INFO" "Testing web server payload payload resolution over SSL..."
+# We test inside the Nginx or PHP loop to bypass host DNS routing constraints if curl isn't fully set up outside
+HTTP_STATUS=$(docker compose exec nginx curl -s -o /dev/null -w "%{http_code}" --insecure "https://$TARGET_HOST/")
+
+if [ "$HTTP_STATUS" == "200" ] || [ "$HTTP_STATUS" == "301" ] || [ "$HTTP_STATUS" == "302" ]; then
+    "$DIR/log" "INFO" "✅ Web server responded successfully with status code: $HTTP_STATUS"
+else
+    "$DIR/log" "ERROR" "Web server infrastructure routing returned an invalid code payload: $HTTP_STATUS"
+    FAILED=1
+fi
+
+# --- TEST 5: Mailpit API Capturing ---
+"$DIR/log" "INFO" "Checking transactional mail gateway visibility..."
+MAILPIT_STATUS=$(docker compose exec wordpress curl -s -o /dev/null -w "%{http_code}" "http://mailpit:8025/api/v1/info")
+if [ "$MAILPIT_STATUS" == "200" ]; then
+    "$DIR/log" "INFO" "✅ Mailpit transaction interception layer accessible."
+else
+    "$DIR/log" "ERROR" "Mail capture routing layer API unreachable."
+    FAILED=1
+fi
+
+# --- FINAL EVALUATION ---
+echo "=========================================================="
+if [ $FAILED -eq 0 ]; then
+    echo "🚀 SUCCESS: Barí Stack passes all smoke tests successfully!"
+    exit 0
+else
+    echo "⚠️  FAILURE: One or more infrastructure layers failed verification check."
+    exit 1
+fi

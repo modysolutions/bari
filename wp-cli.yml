@@ -1,4 +1,0 @@
-path: /var/www/html
-
-@wp:
-  ssh: docker:www-data@wp_app

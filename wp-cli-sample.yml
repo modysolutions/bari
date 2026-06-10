@@ -1,0 +1,4 @@
+path: /var/www/html
+
+@myproject:
+  ssh: docker:www-data@myproject_app

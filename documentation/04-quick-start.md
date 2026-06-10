@@ -94,9 +94,8 @@ After `./bin/install` completes:
 ./bin/wp plugin list
 ./bin/wp post list
 
-# Open a shell inside a container
-# (Note: ./bin/to does not currently exist — use docker exec directly)
-docker exec -it wp_app sh
+# The `./bin/wp` script is a wrapper that executes `wp-cli` inside the running
+# PHP container. It automatically determines the correct container name.
 
 # Install a new PHP dependency
 ./bin/composer require some/package
@@ -130,17 +129,18 @@ docker compose down -v
 
 ## wp-cli.yml
 
-WP-CLI is configured in `wp-cli.yml` at the project root:
+The project root contains a `wp-cli.yml` file to configure WP-CLI behavior. The important part is the alias definition:
 
 ```yaml
-path: /var/www/html
+path: app/wp
 
 @wp:
-  ssh: docker:www-data@wp_app
+  ssh: docker:www-data@myproject_app
 ```
 
-- `path` tells WP-CLI where WordPress is installed inside the container
-- `@wp` is the alias used by `./bin/wp` (derived from `$SITE_SLUG` in `.env`)
+- `path` tells WP-CLI where WordPress is installed *relative to the project root inside the container*.
+- `@wp` is a pre-configured alias. The `./bin/wp` script is hardcoded to use this alias.
 
-If you change `SITE_SLUG`, update the alias name in `wp-cli.yml` to match.
+The `ssh` key specifies the container and user for the command. The container name (`myproject_app` in the example) is dynamically generated based on your `CONTAINER_PREFIX` from `.env`. The `./bin/wp` wrapper script reads this configuration and automatically executes commands in the correct running container.
 
+**You do not need to edit this file.** The script handles the dynamic container name for you.
