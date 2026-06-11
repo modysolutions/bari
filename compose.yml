@@ -7,8 +7,6 @@ services:
       - ./app:/var/www/html
       - ./config/nginx/app.conf.template:/etc/nginx/templates/app.conf.template:ro
       - ./config/nginx/mailpit.conf.template:/etc/nginx/templates/mailpit.conf.template:ro
-      - ./config/ssl/local-cert.pem:/etc/nginx/ssl/cert.pem:ro
-      - ./config/ssl/local-key.pem:/etc/nginx/ssl/key.pem:ro
     depends_on:
       - wordpress
     restart: unless-stopped
