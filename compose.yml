@@ -2,9 +2,7 @@ services:
   nginx:
     container_name: ${CONTAINER_PREFIX:-wp_}server
     image: nginx:alpine
-    ports:
-      - "80:80"
-      - "443:443"
+    user: "0:0"
     volumes:
       - ./app:/var/www/html
       - ./config/nginx/app.conf.template:/etc/nginx/templates/app.conf.template:ro
