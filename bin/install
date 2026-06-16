@@ -12,8 +12,8 @@ source "${ENV_FILE}";
 ./bin/certs
 mkdir -p "${ROOT_DIR}/app/logs" && \
 touch "${ROOT_DIR}/app/logs/xdebug.log" && \
-touch "${ROOT_DIR}/app/logs/wp.log" && \
-chmod 666 "${ROOT_DIR}/app/logs/xdebug.log" "${ROOT_DIR}/app/logs/wp.log" && \
+touch "${ROOT_DIR}/app/logs/debug.log" && \
+chmod 666 "${ROOT_DIR}/app/logs/xdebug.log" "${ROOT_DIR}/app/logs/debug.log" && \
 docker compose up -d --build --force-recreate --remove-orphans && \
 ./bin/version "${WORDPRESS_VERSION}" --no-backup && \
 ./bin/composer config http-basic.plugins.tamarindintelligence.com "${SATISPRESS_KEY}" "satispress" && \
