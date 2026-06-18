@@ -51,7 +51,7 @@ Suggested order:
 6. **Schema governance:** Move custom table changes into documented reversible migrations.
 7. **Build modernization:** Choose a standard asset build workflow and update scripts/docs.
 8. **Namespacing/refactor:** Gradually replace generic global functions in high-change plugins.
-9. **Block foundation:** Add project-owned FSE patterns and native dynamic Gutenberg block examples for plugin-owned data.
+9. **Block foundation:** Add project-owned Gutenberg-native patterns and native dynamic block examples for plugin-owned data.
 10. **Compatibility matrix:** Document supported WordPress/PHP/plugin versions and upgrade test checklist.
 
 ## Validation commands for future fixes

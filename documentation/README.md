@@ -14,7 +14,7 @@ This documentation is intended to be a living document, updated recurrently by t
 | [Quick Start](04-quick-start.md) | A step-by-step setup guide for getting started with the project. |
 | [CLI Scripts](05-cli-scripts.md) | Documentation for all the `bin/` scripts. |
 | [PHP & WordPress](06-php-wordpress.md) | Composer setup, plugin dependencies, core isolation, and the `bari-cli` plugin. |
-| [Theme Development](07-theme.md) | The theme architecture, hook classes, and Twig templates. |
+| [Theme Development](07-theme.md) | Gutenberg-native theme architecture, block templates, template parts, `theme.json`, hook classes, and patterns. |
 | [Frontend Build](08-frontend-build.md) | Webpack, SCSS structure, and design tokens. |
 | [Coding Standards](coding-standards.md) | Standards for PHP, plugins, assets, REST/AJAX, database changes, security, and reviews. |
 | [Plugin Development](plugin-development.md) | Rules and a skeleton for creating new custom plugins. |
@@ -28,7 +28,7 @@ This documentation is intended to be a living document, updated recurrently by t
 - **WordPress layout:** Core lives in `app/wp`; custom content lives in `app/web` and is wired via `WP_CONTENT_DIR`/`WP_CONTENT_URL` in `app/wp-config.php`.
 - **Dependency management:** Root PHP dependencies are installed from `app/composer.json` into `app/vendor`; WordPress plugins/themes are installed into `app/web/plugins` and `app/web/themes` via Composer installer paths.
 - **Theme:** The default theme is a starter block theme using `theme.json`, block templates, and template parts.
-- **Twig/Timber:** Installed globally through the root Composer project for plugins that need server-side templates; it is not the theme layout system.
+- **Timber/Twig:** Installed globally through the root Composer project for plugins that need server-side-rendered templates; it is not the theme renderer.
 
 ## Source-of-truth files
 

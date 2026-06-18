@@ -35,9 +35,11 @@ PHP dependencies (plugins, themes) are managed via **Composer + WPackagist**. No
 
 ## The theme
 
-The custom theme (`app/web/themes/theme/`) is an Astra child theme built on a **hook-based OOP architecture** under the `App\` namespace. It uses **Timber/Twig** for all HTML output: Twig owns the page shell, and Gutenberg block content renders inside `{{ post.content }}` via WordPress's `do_blocks()`.
+The custom theme (`app/web/themes/theme/`) is a **Gutenberg-native theme** built around block templates, template parts, `theme.json`, style variations, and a hook-based OOP setup under the `App\` namespace. WordPress block templates own the page shell; Gutenberg block content renders through WordPress's normal `do_blocks()` flow.
 
-The block editor is configured via `theme.json`, which defines a controlled design system: colour palette, fluid typography scale, spacing presets, and element styles for headings, links, and buttons. Editors work within these constraints rather than having full freestyle control.
+The block editor is configured via `theme.json`, which defines the controlled design system: colour palette, typography, spacing/layout settings, block styles, and style variation foundations. Editors work within these constraints rather than through ad hoc theme templates.
+
+Timber/Twig is installed globally through Composer for compatibility and for custom plugins that need server-side-rendered views. It should not be treated as the primary theme rendering architecture.
 
 ---
 
@@ -78,7 +80,7 @@ The `app/web/plugins/bari-cli/` plugin ships two WP-CLI command groups that are 
 ./bin/wp migration status
 ```
 
-Migration files live in `app/web/plugins/bari-cli/migrations/` by default and extend `AbstractMigration` with `up()` and `down()` methods. See [`docs/06-php-wordpress.md`](docs/06-php-wordpress.md) for full details.
+Migration files live in `app/web/plugins/bari-cli/migrations/` by default and extend `AbstractMigration` with `up()` and `down()` methods. See [`documentation/06-php-wordpress.md`](documentation/06-php-wordpress.md) for full details.
 
 ### `wp pattern` — Gutenberg Block Pattern Management
 
@@ -104,7 +106,7 @@ Detailed documentation for each layer of the project is in the `docs/` directory
 | [`documentation/04-quick-start.md`](documentation/04-quick-start.md)       | Step-by-step setup guide |
 | [`documentation/05-cli-scripts.md`](documentation/05-cli-scripts.md)       | All `bin/` scripts documented |
 | [`documentation/06-php-wordpress.md`](documentation/06-php-wordpress.md)   | Composer setup, plugin dependencies, core isolation, bari-cli |
-| [`documentation/07-theme.md`](documentation/07-theme.md)                   | Theme architecture, hook classes, Twig templates |
+| [`documentation/07-theme.md`](documentation/07-theme.md)                   | Gutenberg-native theme architecture, block templates, hook classes |
 | [`documentation/08-frontend-build.md`](documentation/08-frontend-build.md) | Webpack, SCSS structure, design tokens |
 | [`documentation/09-known-issues.md`](documentation/09-known-issues.md)     | Resolved issues log |
 

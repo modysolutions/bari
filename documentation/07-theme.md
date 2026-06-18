@@ -1,6 +1,8 @@
 # Theme Architecture
 
-The custom theme lives at `app/web/themes/theme/` and is declared as a **child theme of Astra** (`Template: astra` in `style.css`). It inherits Astra's Gutenberg ecosystem, block library, and CSS framework while fully controlling all PHP logic and HTML output through Timber/Twig.
+The custom theme lives at `app/web/themes/theme/` and is a **Gutenberg-native theme**. Its primary rendering layer is WordPress block templates, template parts, `theme.json`, style variations, and block markup.
+
+The current `style.css` does **not** declare `Template: astra`; do not treat this theme as Astra-derived. Timber/Twig remains installed through Composer for compatibility and for plugins that need server-rendered views, but it is not the theme's primary page-rendering model.
 
 ---
 
@@ -10,20 +12,22 @@ The custom theme lives at `app/web/themes/theme/` and is declared as a **child t
 WordPress request
     │
     ▼
-functions.php  →  Hook classes (PHP)  →  WordPress actions/filters
+functions.php  →  Hook classes (PHP)  →  Theme support, assets, filters
     │
     ▼
-Timber::render()  →  Twig template  →  HTML response
-                                           │
-                                           └── {{ post.content }}
-                                                   │
-                                                   ▼
-                                               do_blocks()  →  Gutenberg block output
+WordPress template resolver
+    │
+    ▼
+templates/*.html  →  parts/*.html  →  blocks / patterns / post content
+    │                                      │
+    └──────────────────────────────────────┴── do_blocks() → HTML response
 ```
 
-- **Twig** (via Timber) owns the **page shell** — `<html>`, `<head>`, header, footer, layout wrappers
-- **Gutenberg blocks** render inside `{{ post.content }}`, which internally calls `the_content()` → `apply_filters('the_content', ...)` → `do_blocks()`
-- ACF fields are available in Twig via `{{ options }}` (global options page) and `{{ post.custom.field_name }}`
+- **Block templates** in `templates/*.html` own the page shell for standard frontend requests.
+- **Template parts** in `parts/*.html` own reusable layout regions such as header, footer, and sidebar.
+- **`theme.json`** defines editor controls, presets, global styles, block styles, layout widths, typography, and color foundations.
+- **Gutenberg blocks** are rendered by WordPress through `do_blocks()` as part of the normal block-template flow.
+- **Timber/Twig** should be used only when existing compatibility code requires it or when a plugin needs explicit server-side rendering (SSR) templates.
 
 ---
 
@@ -31,7 +35,7 @@ Timber::render()  →  Twig template  →  HTML response
 
 ```
 theme/
-├── style.css                      # Theme header (declares child of Astra)
+├── style.css                      # Theme header; no Astra Template declaration
 ├── index.php                      # WordPress fallback template
 ├── template-canvas.php            # Blank canvas PHP template
 ├── functions.php                  # Bootstrap: loads autoloader, defines constants, boots hooks
@@ -40,11 +44,30 @@ theme/
 ├── phpstan.neon                   # PHPStan static analysis configuration
 ├── phpunit.xml                    # PHPUnit test configuration
 ├── screenshot.png                 # Theme preview image
+├── templates/                     # Gutenberg block templates
+│   ├── 404.html
+│   ├── archive.html
+│   ├── home.html
+│   ├── index.html
+│   ├── page.html
+│   ├── page-no-title.html
+│   ├── search.html
+│   └── single.html
+├── parts/                         # Gutenberg block template parts
+│   ├── footer.html
+│   ├── header.html
+│   └── sidebar.html
+├── styles/                        # Global style variations and grouped style JSON files
+│   ├── 01-ei.json
+│   ├── 02-ti.json
+│   ├── 03-ci.json
+│   ├── blocks/
+│   ├── sections/
+│   └── typography/
 ├── assets/
-│   ├── fonts/                     # Custom font files (empty, use CSS @font-face)
+│   ├── fonts/                     # Custom font files referenced by theme.json
 │   ├── images/                    # Static theme images
-│   └── styles/
-│       └── main.css               # Static theme CSS (not compiled by webpack; all custom styles live in src/ at project root)
+│   └── css/                       # Static editor/frontend CSS when present
 └── app/
     ├── Hooks/                     # WordPress hook classes
     │   ├── App.php
@@ -52,29 +75,7 @@ theme/
     │   ├── Security.php
     │   ├── Theme.php
     │   └── Views.php
-    └── Views/                     # Twig templates
-        ├── admin/
-        │   └── plugin-notice.php  # WP admin notice (not a Twig file)
-        ├── layouts/
-        │   ├── base.twig          # Master layout
-        │   └── canvas.twig        # Blank canvas layout
-        ├── partials/
-        │   ├── head.twig          # <head> element
-        │   ├── menu.twig          # Navigation menu
-        │   ├── footer.twig        # Footer
-        │   └── pagination.twig    # Pagination links
-        ├── scripts/
-        │   └── lazyload.twig      # Lazy-load script snippet
-        └── templates/
-            ├── index.twig         # Blog index
-            ├── page.twig          # Static page
-            ├── single.twig        # Single post
-            ├── archive.twig       # Post archive
-            ├── 404.twig           # 404 error page
-            ├── search.twig        # Search results
-            ├── author.twig        # Author archive
-            ├── canvas.twig        # Canvas template (no header/footer)
-            └── single-password.twig  # Password-protected post
+    └── Views/                     # Timber/Twig compatibility helpers, not primary rendering
 ```
 
 ---
@@ -87,11 +88,11 @@ All WordPress integration is handled through OOP hook classes. Each class follow
 
 Registered in `functions.php`. Handles:
 
-- **Navigation menus** — Registers `header_menu`, `footer_top_menu`, `footer_bottom_menu`
-- **Theme supports** — `post-thumbnails`, `title-tag`
+- **Navigation menus** — Registers `menu`
+- **Theme supports** — Complementary setup is handled mostly in `App\Hooks\Gutenberg`
 - **Head cleanup** — Removes WordPress feed links, generator tag, oEmbed discovery links, emoji scripts, resource hints
-- **Asset enqueuing** — Registers and enqueues compiled `dist/app.js` and `dist/app.css` with versioning from the `.asset.php` manifest; localises `AppSettings` JS object with `ajaxUrl`, `nonce`, `siteUrl`
-- **Script deferring** — The `bari-app` script tag is output with `defer` attribute
+- **Asset enqueuing** — Registers and enqueues compiled `dist/theme.js` and `dist/theme.css` with versioning/dependencies from `theme.asset.php` when present
+- **Script behavior** — Adds a defer filter for the legacy `app` handle; verify handles before changing asset code
 - **Template redirect** — Returns 404 for tag, date, author, and attachment archives (category and `news-category` taxonomy archives are allowed through)
 - **Content filter** — Removes empty `<p>` wrappers around images
 - **ACF WYSIWYG toolbar** — Adds a "Simple Text" toolbar with bold, italic, underline
@@ -103,19 +104,9 @@ Registered in `functions.php`. Handles:
 
 Registered in `functions.php`. Handles:
 
-- **Theme supports** — Declares `align-wide`, `wp-block-styles`, `responsive-embeds`, `editor-styles`
-- **Editor stylesheet** — Registers `dist/editor.css` as the editor stylesheet (mirrors frontend styles)
-- **Editor assets** — Enqueues `dist/editor.js` and `dist/editor.css` only inside the block editor (reads the `.asset.php` manifest for versioning and dependencies)
-- **Block types** — All blocks allowed by default; projects can restrict via the `bari/allowed_blocks` filter:
-  ```php
-  add_filter('bari/allowed_blocks', function($allowed, $context) {
-      return ['core/paragraph', 'core/heading', 'acf/hero'];
-  }, 10, 2);
-  ```
-- **Block categories** — Prepends three custom categories to the block picker:
-  - `bari-sections` — Sections
-  - `bari-content` — Content
-  - `bari-media` — Media
+- **Theme supports** — Declares `post-thumbnails`, `title-tag`, `custom-logo`, `block-templates`, `block-template-parts`, `editor-styles`, `wp-block-styles`, `responsive-embeds`, and `appearance-tools`
+- **Editor stylesheet** — Calls `add_editor_style('assets/css/editor-style.css')`; verify the file exists before changing this path
+- **Core pattern cleanup** — Removes core block patterns with `remove_theme_support('core-block-patterns')` so editor suggestions stay focused on project-owned patterns
 
 ### `App\Hooks\Security` — Security Hardening
 
@@ -136,9 +127,9 @@ Registered in `functions.php`. On theme activation (`after_switch_theme`):
 5. Adds a placeholder Yoast meta description
 6. Marks the scaffold as complete
 
-### `App\Hooks\Views` — Timber/Twig Integration
+### `App\Hooks\Views` — Timber/Twig compatibility
 
-Registered in `functions.php`. Handles all Timber/Twig wiring:
+Registered in `functions.php`. This class wires Timber/Twig support if Timber is available. Treat it as compatibility/support code, not as the theme page renderer.
 
 - **Timber context** (`timber/context`) — Merges global context:
   - `options` — ACF global options page fields (if ACF active)
@@ -147,6 +138,8 @@ Registered in `functions.php`. Handles all Timber/Twig wiring:
   - `admin_url` — Wraps `admin_url()` for use in templates
   - `print_id` — Outputs ` id="value" ` if value is truthy
 - **Timber locations** (`timber/locations`) — Registers `@theme` namespace pointing to `app/Views/`
+
+Use Timber/Twig for plugin SSR templates only when a feature benefits from server-side templating. Keep Twig templates thin: prepare data in PHP, escape output in templates, and avoid direct database/API access in Twig.
 
 ---
 
@@ -176,42 +169,42 @@ $views     = new Views();     $views->init();
 
 ## `theme.json` — Design System
 
-`theme.json` controls what editors can customise in the Gutenberg block editor. Key settings:
+`theme.json` is the theme's design-system source of truth. Current source settings include:
 
-- `appearanceTools: true` — Enables spacing, padding, border controls in the editor
-- **Layout**: content max-width `1160px`, wide max-width `1440px`
-- **Colour palette**: 9 preset colours (primary, secondary, accent, white, grey-10, grey-20, grey-80, grey-90, black). Custom colours disabled.
-- **Typography**: `Sansation` font family, 8 fluid font sizes (XS through Display using `clamp()`). Custom font sizes disabled.
-- **Spacing**: 6-stop preset scale (XS `0.5rem` → 2XL fluid). Margin and padding controls enabled.
-- **Element styles**: Links, headings (h1–h6) and buttons are wired to design tokens.
-
----
-
-## Twig View Hierarchy
-
-Templates follow **Twig inheritance** via `{% extends %}` and `{% block %}`.
-
-```
-layouts/base.twig          ← Master layout (HTML shell)
-    ├── templates/page.twig
-    ├── templates/single.twig
-    ├── templates/index.twig
-    ├── templates/archive.twig
-    ├── templates/404.twig
-    ├── templates/search.twig
-    └── templates/author.twig
-
-layouts/canvas.twig        ← Blank canvas (no header/footer)
-    └── templates/canvas.twig
-```
-
-Partials (`@theme/partials/*.twig`) are included with `{% include %}` and receive explicit context via `with {}`.
+- `appearanceTools: false` while `App\Hooks\Gutenberg` also declares the `appearance-tools` theme support; verify both if changing editor controls.
+- **Layout**: content size `1160`, wide size `1220`.
+- **Colour palette**: controlled palette with `primary`, `secondary`, `tertiary`, and accent colors. Custom colors and default palettes are disabled.
+- **Typography**: `Bitter` font family loaded from `assets/fonts/bitter/*.woff2`; custom and default font sizes are disabled in favor of project presets.
+- **Spacing**: unit choices are declared, while margin/padding controls are currently disabled in `theme.json`.
+- **Block styles and variations**: many core blocks define section color/style variations directly in `theme.json`.
 
 ---
 
-## Adding Templates for New Post Types
+## Block template hierarchy
 
-1. Create a PHP template file (e.g. `app/web/themes/theme/single-product.php`) that calls `Timber::render()`
-2. Create the Twig template at `app/Views/templates/single-product.twig`
-3. Extend `@theme/layouts/base.twig` and fill the `content` block
+Use WordPress block templates and template parts for theme rendering. Create or edit HTML templates under `templates/` instead of introducing Twig page templates.
+
+```
+templates/page.html      ← Page shell
+templates/single.html    ← Single post shell
+templates/archive.html   ← Archive shell
+templates/search.html    ← Search shell
+templates/404.html       ← 404 shell
+parts/header.html        ← Header template part
+parts/footer.html        ← Footer template part
+parts/sidebar.html       ← Sidebar template part
+```
+
+Use WordPress block comments such as `<!-- wp:template-part {"slug":"header"} /-->`, core blocks, block patterns, and approved plugin blocks. Prefer design tokens from `theme.json` over hardcoded style values.
+
+---
+
+## Adding templates for new post types
+
+Business-owned CPTs should be registered in custom plugins. When a CPT needs theme presentation:
+
+1. Prefer a block template such as `templates/single-product.html` or `templates/archive-product.html` when WordPress supports the target template type.
+2. Compose the layout with core/Spectra blocks, template parts, and pattern markup.
+3. Keep data access, permissions, REST endpoints, and business rules in the owning plugin.
+4. Use Timber/Twig only from the plugin when the CPT requires plugin-owned SSR views that cannot be represented cleanly as block templates.
 

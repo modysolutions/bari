@@ -28,9 +28,11 @@ web/themes/{$name}/    ← All WordPress themes
 The custom theme's PHP classes are autoloaded via Composer's PSR-4 autoloader:
 
 ```json
-"autoload": {
-    "psr-4": {
-        "App\\": "web/themes/theme/app"
+{
+    "autoload": {
+        "psr-4": {
+            "App\\": "web/themes/theme/app"
+        }
     }
 }
 ```
@@ -53,9 +55,9 @@ require_once ABSPATH . '/../vendor/autoload.php';
 | `wpackagist-plugin/w3-total-cache` | `2.9.1` | Page and object caching |
 | `wpackagist-plugin/redirection` | `5.6.1` | 301/302 redirect manager |
 | `wpackagist-plugin/smart-phone-field-for-gravity-forms` | `2.2.0` | Phone field for Gravity Forms |
-| `wpackagist-plugin/ultimate-addons-for-gutenberg` | `2.19.26` | Extended Gutenberg blocks (Astra ecosystem) |
-| `wpackagist-theme/astra` | `4.13.3` | Parent theme (Gutenberg-ready base) |
-| `timber/timber` | `^2.0` | Twig templating engine for WordPress |
+| `wpackagist-plugin/ultimate-addons-for-gutenberg` | `2.19.26` | Extended Gutenberg/Spectra blocks used as presentation/layout primitives where existing content requires them |
+| `wpackagist-theme/twentytwentyfive` | `^1.5` | Bundled fallback/reference WordPress block theme |
+| `timber/timber` | `^2.0` | Timber/Twig support for compatibility and plugin-owned server-rendered views; not the primary theme renderer |
 
 ---
 
@@ -178,7 +180,9 @@ A `{prefix}_migrations` tracking table is created automatically on first use of 
 
 ### Pattern Files
 
-Pattern PHP files are stored at `app/web/themes/theme/app/Patterns/` and must return an associative array:
+Pattern PHP files created by `wp pattern` are intended for reusable Gutenberg block markup. Keep them presentation-only. The default export/scaffold location should be verified against the current `bari-cli` implementation before relying on it; historically this stack used `app/web/themes/theme/app/Patterns/`.
+
+When using PHP pattern files, return an associative array:
 
 ```php
 <?php

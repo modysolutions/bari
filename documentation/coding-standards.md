@@ -6,7 +6,7 @@ These standards are intended for all custom code in `app/web/themes/theme` and `
 
 ## Core principles
 
-1. **Do not edit WordPress core, vendor code, or third-party plugins directly.** Put project behavior in custom plugins or the project FSE theme.
+1. **Do not edit WordPress core, vendor code, or third-party plugins directly.** Put project behavior in custom plugins or the project Gutenberg-native theme.
 2. **Prefer feature plugins for business logic.** The theme should handle presentation; custom plugins should own CPTs, taxonomies, REST APIs, data processing, access rules, and integrations.
 3. **Make code multisite-aware.** This stack is installed as a subdomain multisite network.
 4. **Avoid hardcoded URLs and filesystem paths.** Use WordPress APIs such as `plugins_url()`, `plugin_dir_path()`, `plugin_dir_url()`, `get_stylesheet_directory_uri()`, `content_url()`, `WP_CONTENT_DIR`, and `WP_CONTENT_URL`.
@@ -187,7 +187,7 @@ Keep versions meaningful and update them when behavior/assets change.
 
 ## Theme standards
 
-The FSE theme should primarily own:
+The Gutenberg-native theme should primarily own:
 
 - Shared presentation.
 - Block templates and template parts.
@@ -213,7 +213,7 @@ Theme templates/patterns should:
 - Avoid direct DB/API access and business logic.
 - Use Spectra only for presentation/layout primitives.
 
-Twig/Timber is available globally through Composer for plugins that need server-side templating. Plugin Twig should keep logic minimal, escape output, and avoid direct data access in templates.
+Timber/Twig is available globally through Composer for plugins that need server-side rendering (SSR) templates. Plugin Twig should keep logic minimal, receive prepared data from PHP, escape output, and avoid direct data/API access in templates. Do not use Twig as the default theme rendering layer.
 
 ## ACF standards
 

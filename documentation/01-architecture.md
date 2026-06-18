@@ -26,7 +26,7 @@ bari/
 │       │   ├── bari-cli/       # WP-CLI commands for migrations and patterns
 │       │   └── [installed]/    # Composer-managed third-party plugins
 │       └── themes/
-│           └── theme/          # Custom Astra child theme
+│           └── theme/          # Gutenberg-native custom theme
 │
 ├── bin/                        # CLI automation scripts (Docker proxies)
 │   ├── certs                   # Generate local SSL certs via mkcert
@@ -83,8 +83,10 @@ All third-party plugins and themes are installed and updated via Composer using 
 ### 3. Environment-Driven Configuration
 Every runtime constant — database credentials, WordPress settings, SMTP, memory limits, debug flags — is injected via environment variables from `.env`. The Docker image reads these and writes `wp-config.php` automatically. There is no hardcoded configuration in the codebase.
 
-### 4. Timber/Twig Templating
-The custom theme uses [Timber](https://timber.github.io/docs/) to bridge WordPress's PHP template system with [Twig](https://twig.symfony.com/) templates. PHP Hook classes handle WordPress integration; Twig handles all HTML output.
+### 4. Gutenberg-Native Theme Rendering
+The custom theme in `app/web/themes/theme/` is Gutenberg-native. WordPress block templates in `templates/*.html`, template parts in `parts/*.html`, and `theme.json` own the frontend page shell and editor design system. PHP hook classes handle theme support, assets, cleanup, and compatibility wiring.
+
+[Timber](https://timber.github.io/docs/) and [Twig](https://twig.symfony.com/) are installed through Composer, but they are not the primary theme rendering model. Use Timber/Twig only for compatibility code or for plugins that need explicit server-side-rendered views.
 
 ### 5. Container-First CLI
 All day-to-day commands (Composer, WP-CLI) are proxied through shell scripts in `bin/` that transparently route to the correct Docker container. Developers never need to type raw `docker exec` commands.

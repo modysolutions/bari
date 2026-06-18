@@ -81,12 +81,12 @@ For plugins with a significant amount of assets or for those that require strict
 
     ```javascript
     // config/webpack/webpack.config.js
-    // ...
-    entry: {
-      theme: path.resolve(process.cwd(), 'src', 'theme', 'app.js'),
-      'my-plugin': path.resolve(process.cwd(), 'src', 'plugins', 'my-plugin', 'app.js'),
-    },
-    // ...
+    module.exports = {
+      entry: {
+        theme: path.resolve(process.cwd(), 'src', 'theme', 'app.js'),
+        'my-plugin': path.resolve(process.cwd(), 'src', 'plugins', 'my-plugin', 'app.js'),
+      },
+    };
     ```
 
 3.  Enqueue the generated assets from your plugin's PHP code, using the `my-plugin.asset.php` file for dependencies and versioning.
@@ -106,20 +106,19 @@ For plugins with only a small amount of CSS or JavaScript, you can import them d
     import '../../plugins/my-plugin/script.js';
     ```
 
-    ```scss
-    // In src/theme/app.scss
-    @import '../../plugins/my-plugin/styles.scss';
-    ```
+    In the theme stylesheet entry, import or `@use` the plugin stylesheet using the correct relative path for the actual source file layout.
 
 This approach is simpler as it doesn't require editing the webpack configuration, but it bundles your plugin's assets with the main theme assets. Both options are valid, and the choice depends on the specific needs of your plugin.
 
-## Twig Templating
+## Timber/Twig SSR templates
 
-Timber/Twig is available globally via Composer and can be used for server-side templating in plugins. To maintain a consistent and secure codebase, please follow the guidelines outlined in the [Coding Standards](coding-standards.md#twigtimber).
+Timber/Twig is available globally via Composer and can be used when a plugin needs server-side-rendered (SSR) templates. It is optional plugin infrastructure, not the primary theme rendering model. The custom theme is Gutenberg-native and should use block templates, template parts, and `theme.json` for its page shell.
 
-### Example: Rendering a Twig Template
+To maintain a consistent and secure codebase, follow the guidelines in [Coding Standards](coding-standards.md): prepare data in PHP, keep Twig templates thin, escape output, and avoid direct database/API access in templates.
 
-To render a Twig template from your plugin, you can use the `Timber::render` method. It's recommended to store your plugin's Twig templates in a `views` or `templates` directory within your plugin.
+### Example: rendering a plugin-owned Twig template
+
+To render a Twig template from your plugin, use `Timber::render()`. Store plugin Twig templates in a plugin-owned `views/` or `templates/` directory.
 
 ```php
 // In your plugin's main file or a relevant class method
