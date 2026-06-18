@@ -11,10 +11,9 @@ app/web/advanced-cache.php
 app/web/cache
 app/web/ewww
 app/web/license.txt
-app/web/omitsis-logs
 app/web/plugins/*
 app/web/readme.html
-app/web/themes
+app/web/themes/*
 app/web/uploads
 app/web/w3tc-config
 app/web/wflogs
